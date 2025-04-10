@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.e_almawar">
+    <!-- Menambahkan izin akses untuk menyimpan dan membaca gambar -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logo"
+        android:splashScreenTheme="@style/Theme.App.Starting"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.EAlMawar"
+        tools:targetApi="31">
+        <activity
+            android:name=".AdminEditFormulirFragment"
+            android:exported="false" />
+        <activity
+            android:name=".AdminEditEkstrakulikulerFragment"
+            android:exported="false" />
+        <activity
+            android:name=".AdminEditSarprasFragment"
+            android:exported="false" />
+        <activity
+            android:name=".AdminSejarahFragment"
+            android:exported="false" />
+        <activity
+            android:name=".AdminSchoolFragment"
+            android:exported="false" />
+        <activity
+            android:name=".AdminDatabasePendaftaranFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaEkstrakulikulerFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaSarprasFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaVisimisiFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaTujuanFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaSejarahFragment"
+            android:exported="false" />
+        <activity
+            android:name=".FlashscreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SiswaAkunFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaFormulirFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaSchoolFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaHomeFragment"
+            android:exported="false" />
+        <activity
+            android:name=".LupaPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SiswaHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginSiswaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".EditProfileSiswaFragment"
+            android:exported="true" />
+    </application>
+
+</manifest>
