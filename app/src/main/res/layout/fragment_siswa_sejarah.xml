@@ -87,7 +87,7 @@
                     android:shadowDx="3"
                     android:shadowDy="3"
                     android:shadowRadius="20"
-                    android:text="Sekolah Islam Terpadu ALMAWAR Kolaka"
+                    android:text="Sekolahh Islam Terpadu ALMAWAR Kolaka"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView5"
