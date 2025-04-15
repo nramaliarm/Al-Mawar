@@ -64,7 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         .set(userMap)
                                         .addOnSuccessListener(aVoid -> {
                                             Toast.makeText(SignUpActivity.this, "Pendaftaran Berhasil!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(SignUpActivity.this, LoginSiswaActivity.class));
+                                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                                             finish();
                                         })
                                         .addOnFailureListener(e -> {
@@ -80,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         btnLogin.setOnClickListener(v -> {
-            startActivity(new Intent(SignUpActivity.this, LoginSiswaActivity.class));
+            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
         });
 
         btnBack.setOnClickListener(v -> finish());  // Kembali ke halaman sebelumnya

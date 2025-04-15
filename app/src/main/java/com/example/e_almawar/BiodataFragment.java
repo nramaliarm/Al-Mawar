@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -15,11 +16,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.e_almawar.viewmodel.FormViewModel;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 public class BiodataFragment extends Fragment {
 
-    private EditText etNamaLengkap, etNisn, etNik, etTempatTanggalLahir, etJenisKelamin, etAgama;
+    private EditText etNamaLengkap, etNisn, etNik, etTempatTanggalLahir;
     private EditText etJumlahSaudara, etNomorHandphone, etEmail, etAsalSekolah, etNpsn, etAlamatSekolah;
+    private MaterialAutoCompleteTextView etJenisKelamin, etAgama; // Ubah jadi AutoComplete
     private Button btnNext;
     private FormViewModel formViewModel;
 
@@ -35,7 +38,7 @@ public class BiodataFragment extends Fragment {
         etNisn = view.findViewById(R.id.etNisn);
         etNik = view.findViewById(R.id.etNik);
         etTempatTanggalLahir = view.findViewById(R.id.etTempatTanggalLahir);
-        etJenisKelamin = view.findViewById(R.id.etJenisKelamin);
+        etJenisKelamin = view.findViewById(R.id.etJenisKelamin); // AutoComplete
         etAgama = view.findViewById(R.id.etAgama);
         etJumlahSaudara = view.findViewById(R.id.etJumlahSaudara);
         etNomorHandphone = view.findViewById(R.id.etNomorHandphone);
@@ -43,6 +46,17 @@ public class BiodataFragment extends Fragment {
         etAsalSekolah = view.findViewById(R.id.etAsalSekolah);
         etNpsn = view.findViewById(R.id.etNpsn);
         etAlamatSekolah = view.findViewById(R.id.etAlamatSekolah);
+
+        // Set adapter untuk AutoCompleteTextView Jenis Kelamin
+        String[] jenisKelaminOptions = {"Laki-Laki", "Perempuan"};
+        ArrayAdapter<String> adapterJenisKelamin = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, jenisKelaminOptions);
+        etJenisKelamin.setAdapter(adapterJenisKelamin);
+
+        // Set adapter untuk AutoCompleteTextView Agama
+        String[] agamaOptions = {"Islam", "Kristen", "Katolik", "Hindu", "Buddha", "Konghucu"};
+        ArrayAdapter<String> adapterAgama = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, agamaOptions);
+        etAgama.setAdapter(adapterAgama);
+
 
         // Isi ulang data jika sudah ada di ViewModel
         etNamaLengkap.setText(formViewModel.getNamaLengkap());
@@ -122,6 +136,61 @@ public class BiodataFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
+
+        etJumlahSaudara.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                formViewModel.setJumlahSaudara(s.toString());
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etNomorHandphone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                formViewModel.setNomorHandphone(s.toString());
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                formViewModel.setEmail(s.toString());
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etAsalSekolah.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                formViewModel.setAsalSekolah(s.toString());
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etNpsn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                formViewModel.setNpsn(s.toString());
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etAlamatSekolah.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                formViewModel.setAlamatSekolah(s.toString());
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
     }
 
     private void pindahKeHalamanSelanjutnya() {

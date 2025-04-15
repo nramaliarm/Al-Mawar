@@ -131,7 +131,7 @@
                             android:lineSpacingExtra="4dp"
                             android:textColor="@color/black"
                             android:justificationMode="inter_word"
-                            android:text="Kolaka merupakan salah satu daerah pesisir pantai yang berbatasan langsung dengan pegunungan. Kolaka juga dikenal sebagai daerah pegunungan yang memberikan keindahan panorama dan memiliki sumber alam yang melimpah. Kolaka terletak di bagian barat Provinsi Sulawesi Tenggara dengan luas wilayah sekitar 3.283,64 km² serta terbagi menjadi 12 kecamatan 100 desa dan 35 kelurahan dengan jumlah penduduk sebanyak 228.970 jiwa. Kabupaten ini merupakan salah satu wilayah terbesar di provinsi Sulawesi Tenggara yang memiliki kekayaan alam yang sangat potensial berupa hasil pertanian, pertambangan dan juga perikanan. Hasil pertanian dengan komoditi cengkeh, kakao, padi, merica, nilam, kelapa, jagung dan durian yang melimpah. Potensi hasil tambang berupa emas, nikel, marmer, onix, kuarsa dan granit hitam hasil alam menjadi keunggulan Provinsi Sulawesi Tenggara khususnya Kabupaten Kolaka. Hasil perikanan dengan komoditi tambak, kolam ikan dan rumput laut yang kini banyak dikembangkan masyarakat Kabupaten Kolaka." />
+                            android:text="Memuat data..." />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

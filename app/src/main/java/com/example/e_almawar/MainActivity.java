@@ -4,47 +4,105 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login_siswa);
 
-        // Memeriksa status login pengguna
+        // Cek login status dari SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
-        // Jika sudah login, arahkan ke halaman utama siswa
         if (isLoggedIn) {
-            Intent intent = new Intent(MainActivity.this, SiswaHomeActivity.class);
-            startActivity(intent);
-            finish();  // Tutup MainActivity agar tidak bisa kembali ke halaman ini
+            startActivity(new Intent(MainActivity.this, SiswaHomeActivity.class));
+            finish();
+            return;
         }
 
-        // Tombol untuk login sebagai admin
-        Button btnAdmin = findViewById(R.id.btnAdmin);
-        btnAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Arahkan ke halaman login admin
-                Intent intent = new Intent(MainActivity.this, LoginAdminActivity.class);
-                startActivity(intent);
+        // Inisialisasi Firebase
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // Inisialisasi UI
+        EditText inputEmail = findViewById(R.id.inputEmail);
+        EditText inputPassword = findViewById(R.id.inputPassword);
+        Button btnLogin = findViewById(R.id.btnLogin);
+        ImageView btnBack = findViewById(R.id.btnBack);
+        TextView btnDaftar = findViewById(R.id.btnDaftar);
+        TextView txtLupaPassword = findViewById(R.id.txtLupaPassword);
+
+        btnLogin.setOnClickListener(v -> {
+            String email = inputEmail.getText().toString().trim();
+            String password = inputPassword.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Harap isi email dan password!", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String uid = user.getUid();
+
+                            db.collection("users").document(uid).get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        if (documentSnapshot.exists()) {
+                                            String nama = documentSnapshot.getString("nama");
+                                            String emailUser = documentSnapshot.getString("email");
+                                            String role = documentSnapshot.getString("role");
+
+                                            if (role != null && role.equals("siswa")) {
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                editor.putBoolean("isLoggedIn", true);
+                                                editor.putString("user_name", nama);
+                                                editor.putString("user_email", emailUser);
+                                                editor.apply();
+
+                                                startActivity(new Intent(MainActivity.this, SiswaHomeActivity.class));
+                                                finish();
+                                            } else {
+                                                Toast.makeText(MainActivity.this, "Akun ini bukan untuk siswa!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan di Firestore", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(MainActivity.this, "Gagal mengambil data pengguna: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
+                        } else {
+                            Toast.makeText(MainActivity.this, "Login gagal: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
-        // Tombol untuk login sebagai siswa
-        Button btnSiswa = findViewById(R.id.btnSiswa);
-        btnSiswa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Arahkan ke halaman login siswa
-                Intent intent = new Intent(MainActivity.this, LoginSiswaActivity.class);
-                startActivity(intent);
-            }
+        btnDaftar.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, SignUpActivity.class));
         });
+
+        txtLupaPassword.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, LupaPasswordActivity.class));
+        });
+
+        btnBack.setOnClickListener(v -> finish());
     }
 }

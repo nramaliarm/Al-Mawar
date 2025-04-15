@@ -15,6 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import android.widget.ArrayAdapter;
+
 import com.example.e_almawar.viewmodel.FormViewModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,7 +26,9 @@ import java.util.Map;
 
 public class TempatTinggalFragment extends Fragment {
 
-    private EditText etAlamat, etTinggalBersama, etStatusRumah;
+    private EditText etAlamat;
+    MaterialAutoCompleteTextView etTinggalBersama, etStatusRumah;
+
     private Button btnSubmit, btnPrev;
     private FormViewModel formViewModel;
     private FirebaseFirestore db;
@@ -43,6 +48,16 @@ public class TempatTinggalFragment extends Fragment {
         etAlamat = view.findViewById(R.id.etAlamat);
         etTinggalBersama = view.findViewById(R.id.etTinggalBersama);
         etStatusRumah = view.findViewById(R.id.etStatusRumah);
+
+        // Set adapter untuk AutoCompleteTextView Tinggal Bersama
+        String[] tinggalBersamaOptions = {"Orang Tua", "Wali", "Kakek/Nenek", "Saudara", "Sendiri", "Lainnya"};
+        ArrayAdapter<String> adapterTinggalBersama = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, tinggalBersamaOptions);
+        etTinggalBersama.setAdapter(adapterTinggalBersama);
+
+        // Set adapter untuk AutoCompleteTextView Status Rumah
+        String[] statusRumahOptions = {"Milik Sendiri", "Kontrak", "Sewa", "Menumpang", "Asrama", "Lainnya"};
+        ArrayAdapter<String> adapterStatusRumah = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, statusRumahOptions);
+        etStatusRumah.setAdapter(adapterStatusRumah);
 
         // Mengisi ulang data jika sudah ada di ViewModel
         etAlamat.setText(formViewModel.alamat);
@@ -82,18 +97,18 @@ public class TempatTinggalFragment extends Fragment {
         Map<String, Object> dataSiswa = new HashMap<>();
 
         // Data Pribadi Siswa
-        dataSiswa.put("namaLengkap", formViewModel.namaLengkap);
-        dataSiswa.put("nisn", formViewModel.nisn);
-        dataSiswa.put("nik", formViewModel.nik);
-        dataSiswa.put("tempatTanggalLahir", formViewModel.tempatTanggalLahir);
-        dataSiswa.put("jenisKelamin", formViewModel.jenisKelamin);
-        dataSiswa.put("agama", formViewModel.agama);
-        dataSiswa.put("jumlahSaudara", formViewModel.jumlahSaudara);
-        dataSiswa.put("nomorHandphone", formViewModel.nomorHandphone);
-        dataSiswa.put("email", formViewModel.email);
-        dataSiswa.put("asalSekolah", formViewModel.asalSekolah);
-        dataSiswa.put("npsn", formViewModel.npsn);
-        dataSiswa.put("alamatSekolah", formViewModel.alamatSekolah);
+        dataSiswa.put("namaLengkap", formViewModel.getNamaLengkap());
+        dataSiswa.put("nisn", formViewModel.getNisn());
+        dataSiswa.put("nik", formViewModel.getNik());
+        dataSiswa.put("tempatTanggalLahir", formViewModel.getTempatTanggalLahir());
+        dataSiswa.put("jenisKelamin", formViewModel.getJenisKelamin());
+        dataSiswa.put("agama", formViewModel.getAgama());
+        dataSiswa.put("jumlahSaudara", formViewModel.getJumlahSaudara());
+        dataSiswa.put("nomorHandphone", formViewModel.getNomorHandphone());
+        dataSiswa.put("email", formViewModel.getEmail());
+        dataSiswa.put("asalSekolah", formViewModel.getAsalSekolah());
+        dataSiswa.put("npsn", formViewModel.getNpsn());
+        dataSiswa.put("alamatSekolah", formViewModel.getAlamatSekolah());
 
         // Data Orang Tua & Wali
         dataSiswa.put("namaAyah", formViewModel.namaAyah);
@@ -120,10 +135,16 @@ public class TempatTinggalFragment extends Fragment {
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(getActivity(), "Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
                     Log.d("Firestore", "Data berhasil disimpan dengan ID: " + documentReference.getId());
+
+                    // Pindah ke fragment_siswa_home setelah berhasil simpan
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, new SiswaHomeFragment());
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getActivity(), "Gagal menyimpan data!", Toast.LENGTH_SHORT).show();
                     Log.e("Firestore", "Gagal menyimpan data", e);
                 });
+        }
     }
-}

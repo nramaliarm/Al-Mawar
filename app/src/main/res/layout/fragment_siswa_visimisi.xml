@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradien_background">
+    android:background="@drawable/gradien_background"
+    tools:context=".SiswaVisimisiFragment">
 
-    <!-- ScrollView untuk membuat konten bisa di-scroll -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -29,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="Halo, Syahril Ramadhan!"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -48,16 +47,14 @@
 
                 <TextView
                     android:id="@+id/tv_school_name"
-                    android:layout_width="192dp"
-                    android:layout_height="43dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:fontFamily="sans-serif-black"
                     android:text="Profile Sekolah"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
 
@@ -66,15 +63,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_school_name"
                     app:srcCompat="@drawable/sekolah" />
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="239dp"
-                    android:layout_height="52dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:background="#00575050"
                     android:fontFamily="sans-serif-black"
@@ -86,11 +82,10 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.114"
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Data dari Firebase -->
             <TextView
                 android:id="@+id/visi"
                 android:layout_width="match_parent"
@@ -98,7 +93,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/background_visi"
                 android:gravity="center"
-                android:text="VISI\n \n“UNGGUL DALAM IMTAQ, KOMPETITIF DALAM IPTEK DAN BERWAWASAN GLOBAL”"
+                android:text="Memuat visi dari Firebase..."
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
@@ -111,13 +106,11 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/background_visi"
                 android:gravity="center"
-                android:text="\n MISI\n \n Menumbuh kembangkan ketaatan beribadah dan nilai-nilai akhlak karimah, Meningkatkan kecintaan terhadap Al Qur’an, Mengembangkan pembelajaran berbasis SAINTEK, Meningkatkan penguasaan berbahasa asing \n"
+                android:text="Memuat misi dari Firebase..."
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradien_background">
 
-    <!-- ScrollView untuk konten utama -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,6 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
+
             <!-- Judul Halaman -->
             <TextView
                 android:layout_width="match_parent"
@@ -26,19 +26,19 @@
                 android:gravity="center"
                 android:paddingBottom="10dp"
                 android:text="Pendaftaran Sekolah"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <!-- Form Container -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="60dp"
                 android:background="@drawable/formulir_background"
                 android:elevation="4dp"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:radius="12dp">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -58,7 +58,6 @@
 
                 <!-- Nama Lengkap -->
                 <TextView
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold"
@@ -92,10 +91,10 @@
                     android:id="@+id/etNisn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/background_input"
                     android:hint="Masukkan NISN"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:minHeight="48dp"
                     android:padding="8dp"
                     android:textSize="16sp" />
@@ -117,18 +116,18 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/background_input"
                     android:hint="Masukkan NIK"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:minHeight="48dp"
                     android:padding="8dp"
                     android:textSize="16sp" />
 
-                <!-- Tempat Tanggal Lahir -->
+                <!-- Tanggal Lahir -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="Tempat Tanggal Lahir"
+                    android:text="Tanggal Lahir"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -138,13 +137,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/background_input"
-                    android:hint="Masukkan Tempat Tanggal Lahir"
-                    android:inputType="text"
+                    android:hint="Masukkan Tanggal Lahir"
+                    android:inputType="date"
                     android:minHeight="48dp"
                     android:padding="8dp"
                     android:textSize="16sp" />
 
-                <!-- Jenis Kelamin -->
+                <!-- Jenis Kelamin (Dropdown) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -154,47 +153,58 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etJenisKelamin"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Jenis Kelamin"
-                    android:inputType="text"
                     android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                <!-- Agama -->
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/etJenisKelamin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Pilih Jenis Kelamin"
+                        android:inputType="none"
+                        android:textSize="16sp"
+                        android:padding="8dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Agama (Dropdown) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/inter_bold"
                     android:text="Agama"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etAgama"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Agama"
-                    android:inputType="number"
                     android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                <!-- Jumlah Saudara -->
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/etAgama"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Pilih Agama"
+                        android:inputType="none"
+                        android:textSize="16sp"
+                        android:padding="8dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <!-- Jumlah Saudaraa -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="Jumlah Saudara "
+                    android:text="Jumlah Saudara"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -216,7 +226,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="Nomor Handphone "
+                    android:text="Nomor Handphone"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -238,7 +248,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="Email "
+                    android:text="Email"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -254,13 +264,13 @@
                     android:padding="8dp"
                     android:textSize="16sp" />
 
-                <!-- Asal sekolah -->
+                <!-- Asal Sekolah -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="Asal Sekolah "
+                    android:text="Asal Sekolah"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -282,7 +292,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="NPSN "
+                    android:text="NPSN"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -304,7 +314,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="Alamat Sekolah "
+                    android:text="Alamat Sekolah"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -315,7 +325,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/background_input"
                     android:hint="Masukkan Alamat Sekolah Asal"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:minHeight="48dp"
                     android:padding="8dp"
                     android:textSize="16sp" />
@@ -337,16 +347,9 @@
                         android:fontFamily="@font/inter_bold"
                         android:backgroundTint="@android:color/holo_orange_light"
                         android:text="Selanjutnya ❯"
-                        android:layout_marginStart="5dp"/>
-
+                        android:layout_marginStart="5dp" />
                 </LinearLayout>
-
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"></LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

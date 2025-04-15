@@ -77,7 +77,7 @@
                     android:padding="8dp"
                     android:textSize="16sp" />
 
-                <!-- Tinggal Bersama -->
+                <!-- Tinggal Bersama (Dropdown) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,19 +87,24 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etTinggalBersama"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Tinggal Bersama Siapa"
-                    android:inputType="text"
                     android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                <!-- Status-->
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/etTinggalBersama"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Pilih Tinggal Bersama Siapa"
+                        android:inputType="none"
+                        android:textSize="16sp"
+                        android:padding="8dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Status Rumah (Dropdown) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,17 +114,22 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etStatusRumah"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Pilih Status Rumah"
-                    android:inputType="text"
                     android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/etStatusRumah"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Pilih Status Rumah"
+                        android:inputType="none"
+                        android:textSize="16sp"
+                        android:padding="8dp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Tombol Navigasi -->
                 <LinearLayout
