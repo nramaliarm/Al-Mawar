@@ -27,25 +27,26 @@ public class SiswaSejarahFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_siswa_sejarah, container, false);
         textViewSejarah = view.findViewById(R.id.textView5);
 
-//        DatabaseReference ref = Firest.getInstance().getReference()
-//                .child("sejarah").child("sejarahID").child("sejarah_sekolah");
-//
-//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                if (snapshot.exists()) {
-//                    String sejarah = snapshot.getValue(String.class);
-//                    textViewSejarah.setText(sejarah);
-//                } else {
-//                    textViewSejarah.setText("Data tidak ditemukan.");
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                textViewSejarah.setText("Gagal memuat data: " + error.getMessage());
-//            }
-//        });
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+
+                .child("sejarah").child("sejarahID").child("sejarah_sekolah");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String sejarah = snapshot.getValue(String.class);
+                    textViewSejarah.setText(sejarah);
+                } else {
+                    textViewSejarah.setText("Data tidak ditemukan.");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                textViewSejarah.setText("Gagal memuat data: " + error.getMessage());
+            }
+        });
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("sejarah").document("sejarahID")
                 .get()
