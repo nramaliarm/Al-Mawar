@@ -1,20 +1,26 @@
 package com.example.e_almawar;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.e_almawar.viewmodel.Facility;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +32,9 @@ public class SiswaSarprasFragment extends Fragment {
     private List<Facility> facilityList;
     private FirebaseFirestore db;
 
+    private TextView tvGreeting;
+    private ImageView ivProfile;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_siswa_sarpras, container, false);
@@ -33,14 +42,51 @@ public class SiswaSarprasFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerFacilities);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
+        tvGreeting = view.findViewById(R.id.tv_greeting);
+        ivProfile = view.findViewById(R.id.iv_profile);
+
         facilityList = new ArrayList<>();
         adapter = new FacilityAdapter(getContext(), facilityList);
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
-        loadFacilities();
+
+        loadUserData(); // Ambil nama dan foto profil
+        loadFacilities(); // Ambil data sarana prasarana
 
         return view;
+    }
+
+    private void loadUserData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("users").document(uid)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String name = documentSnapshot.getString("nama");
+                            String profileUrl = documentSnapshot.getString("profileUrl");
+
+                            if (name != null) {
+                                tvGreeting.setText("Halo, " + name + "!");
+                            }
+
+                            if (profileUrl != null && !profileUrl.isEmpty()) {
+                                Glide.with(requireContext())
+                                        .load(profileUrl)
+                                        .placeholder(R.drawable.ic_profile)
+                                        .error(R.drawable.ic_profile)
+                                        .circleCrop()
+                                        .into(ivProfile);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("SiswaSarprasFragment", "Gagal memuat data pengguna: " + e.getMessage());
+                        Toast.makeText(getContext(), "Gagal mengambil data pengguna", Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
     private void loadFacilities() {
@@ -55,7 +101,8 @@ public class SiswaSarprasFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    // handle error
+                    Log.e("SiswaSarprasFragment", "Gagal mengambil data sarpras: " + e.getMessage());
+                    Toast.makeText(getContext(), "Gagal memuat data sarana prasarana", Toast.LENGTH_SHORT).show();
                 });
     }
 }

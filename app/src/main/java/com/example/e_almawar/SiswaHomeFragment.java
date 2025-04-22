@@ -6,49 +6,59 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SiswaHomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private TextView tvGreeting;
+    private ImageView ivProfile; // Tambahkan ini
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_siswa_home, container, false);
 
-        // Inisialisasi Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Inisialisasi TextView
         tvGreeting = view.findViewById(R.id.tv_greeting);
+        ivProfile = view.findViewById(R.id.iv_profile); // Inisialisasi ImageView
 
-        // Cek user yang sedang login
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             String uid = user.getUid();
 
-            // Ambil nama dari Firestore
             db.collection("users").document(uid).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             String name = documentSnapshot.getString("nama");
+                            String imageUrl = documentSnapshot.getString("profileUrl"); // Ambil URL gambar
+
                             if (name != null && !name.isEmpty()) {
                                 tvGreeting.setText("Halo, " + name + "!");
                             } else {
                                 tvGreeting.setText("Halo, Siswa!");
+                            }
+
+                            if (imageUrl != null && !imageUrl.isEmpty()) {
+                                Glide.with(requireContext())
+                                        .load(imageUrl)
+                                        .placeholder(R.drawable.ic_profile) // default/fallback image
+                                        .error(R.drawable.ic_profile)
+                                        .circleCrop()
+                                        .into(ivProfile);
                             }
                         } else {
                             Log.e("SiswaHomeFragment", "Dokumen tidak ditemukan di Firestore.");
@@ -61,7 +71,6 @@ public class SiswaHomeFragment extends Fragment {
             Log.e("SiswaHomeFragment", "User tidak ditemukan!");
         }
 
-        // Tombol Daftar
         Button daftarButton = view.findViewById(R.id.button_daftar);
         daftarButton.setOnClickListener(v -> {
             Log.d("SiswaHomeFragment", "Tombol Daftar ditekan!");
