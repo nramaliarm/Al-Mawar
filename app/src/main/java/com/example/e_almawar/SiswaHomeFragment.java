@@ -1,5 +1,8 @@
 package com.example.e_almawar;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,6 +91,29 @@ public class SiswaHomeFragment extends Fragment {
             }
         });
 
+        // Tombol Lokasi
+        Button lokasiButton = view.findViewById(R.id.btn_location);
+        lokasiButton.setOnClickListener(v -> {
+            String mapsUrl = "https://maps.app.goo.gl/EVwcGq8uixrfSUQj9";
+
+            try {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl));
+                mapIntent.setPackage("com.google.android.apps.maps");
+
+                if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl));
+                    startActivity(browserIntent);
+                }
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(requireContext(), "Tidak dapat membuka Google Maps", Toast.LENGTH_SHORT).show();
+                String alamat = "Jl. Pondok Pesantren No.10, Lakomato, Kec. Kolaka";
+                Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode(alamat));
+                Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, geoUri);
+                startActivity(fallbackIntent);
+            }
+        });
         return view;
     }
 }
