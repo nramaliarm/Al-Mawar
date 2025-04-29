@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Warna latar belakang tombol -->
+    <solid android:color="#808080"/> <!-- Gantilah dengan warna yang sesuai -->
+
+    <!-- Sudut melengkung -->
+    <corners android:radius="20dp"/> <!-- Sesuaikan radius dengan kebutuhan -->
+
+    <!-- Shadow (opsional) -->
+    <padding android:left="10dp" android:top="10dp" android:right="10dp" android:bottom="10dp"/>
+</shape>

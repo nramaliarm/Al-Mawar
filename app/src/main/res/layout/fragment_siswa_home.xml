@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradien_background">
+    android:background="@color/white">
 
     <!-- ScrollView untuk konten utama -->
     <ScrollView
@@ -65,19 +65,27 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
 
-                <TextView
-                    android:id="@+id/textView3"
+                <Button
+                    android:id="@+id/btn_location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/location_background"
-                    android:gravity="center"
+                    android:backgroundTint="@color/orange"
+                    android:drawableEnd="@drawable/ic_lokasi2"
+                    android:drawablePadding="8dp"
+                    android:gravity="start|center_vertical"
                     android:padding="8dp"
-                    android:text="  Jl.Pondok Pesantren No.10, Lakomato, Kec. Kolaka"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
+                    android:shadowColor="#3C3A3A"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="10"
+                    android:text="Jl.Pondok Pesantren No.10, Lakomato, Kec. Kolaka"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="#FDFDFD"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_school_name" />
 
@@ -90,11 +98,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/sekolah" />
+                app:srcCompat="@drawable/almawar" />
 
             <TextView
                 android:id="@+id/textView6"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/background_visi"
@@ -103,7 +111,7 @@
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/imageView6"
@@ -119,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="100dp"
-                android:backgroundTint="@color/button_color"
+                android:backgroundTint="@color/orange"
                 android:fontFamily="sans-serif-black"
                 android:padding="16dp"
                 android:shadowColor="#3C3A3A"

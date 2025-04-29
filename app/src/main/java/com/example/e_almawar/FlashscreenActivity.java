@@ -1,40 +1,36 @@
 package com.example.e_almawar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
+// Pastikan MainActivity diimpor jika berada di paket yang berbeda
+import com.example.e_almawar.MainActivity;
 
 public class FlashscreenActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_EAlMawar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashscreen);
-        test();
-        // Timer 3 Detik
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(FlashscreenActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish(); // Supaya ga bisa balik ke flashscreen
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out); // Animasi transisi
-            }
-        }, 6000); // 3 Detik
+
+        // Menangani hasil dari sign-in intent
+        // Menggunakan Handler untuk menunda eksekusi selama 6 detik
+        new Handler().postDelayed(() -> {
+            // Intent untuk berpindah ke MainActivity setelah 6 detik
+            Intent intent = new Intent(FlashscreenActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Supaya tidak bisa kembali ke Flashscreen setelah berpindah
+            // Animasi transisi antara FlashscreenActivity dan MainActivity
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }, 6000); // Delay selama 6 detik
     }
 
+    // Method test() untuk menulis pesan ke database (opsional)
     private void test() {
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
+        // Menulis pesan ke database
+        // FirebaseDatabase database = FirebaseDatabase.getInstance();
+        // DatabaseReference myRef = database.getReference("message");
+        // myRef.setValue("Hello, World!");
     }
 }

@@ -14,12 +14,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class MainActivity extends AppCompatActivity {
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 9001;  // Unique request code for Google Sign-In
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +55,17 @@ public class MainActivity extends AppCompatActivity {
         ImageView btnBack = findViewById(R.id.btnBack);
         TextView btnDaftar = findViewById(R.id.btnDaftar);
         TextView txtLupaPassword = findViewById(R.id.txtLupaPassword);
+        Button btnLoginGoogle = findViewById(R.id.btnLoginGoogle);  // Tombol untuk login dengan Google
 
+        // Inisialisasi Google Sign-In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))  // Gantilah dengan ID klien Firebase-mu
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Login dengan Email dan Password
         btnLogin.setOnClickListener(v -> {
             String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
@@ -95,14 +113,74 @@ public class MainActivity extends AppCompatActivity {
                     });
         });
 
+        // Login dengan Google
+        btnLoginGoogle.setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN); // Memulai Google Sign-In dan akan menampilkan pop-up untuk memilih akun
+        });
+
         btnDaftar.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+            startActivity(new Intent(MainActivity.this, SignUpActivity.class)); // Navigasi ke sign-up
         });
 
         txtLupaPassword.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, LupaPasswordActivity.class));
+            startActivity(new Intent(MainActivity.this, LupaPasswordActivity.class)); // Navigasi ke lupa password
         });
 
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> finish());  // Kembali ke halaman sebelumnya
+    }
+
+    // Menangani hasil dari sign-in intent (Google Sign-In)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignIn.getSignedInAccountFromIntent(data)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            GoogleSignInAccount account = task.getResult();
+                            firebaseAuthWithGoogle(account.getIdToken());  // Menggunakan idToken untuk autentikasi Firebase
+                        } else {
+                            Toast.makeText(MainActivity.this, "Google Sign-In failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        String uid = user.getUid();
+
+                        db.collection("users").document(uid).get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        String nama = documentSnapshot.getString("nama");
+                                        String emailUser = documentSnapshot.getString("email");
+                                        String role = documentSnapshot.getString("role");
+
+                                        if (role != null && role.equals("siswa")) {
+                                            SharedPreferences.Editor editor = getSharedPreferences("user_data", Context.MODE_PRIVATE).edit();
+                                            editor.putBoolean("isLoggedIn", true);
+                                            editor.putString("user_name", nama);
+                                            editor.putString("user_email", emailUser);
+                                            editor.apply();
+
+                                            startActivity(new Intent(MainActivity.this, SiswaHomeActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Akun ini bukan untuk siswa!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan di Firestore", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

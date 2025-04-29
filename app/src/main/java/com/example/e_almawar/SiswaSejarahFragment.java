@@ -46,11 +46,11 @@ public class SiswaSejarahFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         // Ambil data sejarah dari Firestore
-        db.collection("sejarah").document("sejarahID")
+        db.collection("sejarah").document("F3KMGYAUe263MP7Uir2Z")
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String sejarah = documentSnapshot.getString("sejarah_sekolah");
+                        String sejarah = documentSnapshot.getString("deskripsi");
                         textViewSejarah.setText(sejarah);
                     } else {
                         textViewSejarah.setText("Data tidak ditemukan.");

@@ -139,6 +139,17 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"/>
 
+    <!-- Tombol Login Google -->
+    <Button
+        android:id="@+id/btnLoginGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Login with Google"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp" />
+
     <!-- Teks Daftar -->
     <TextView
         android:id="@+id/btnDaftar"

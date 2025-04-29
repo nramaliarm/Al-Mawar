@@ -1,13 +1,18 @@
 package com.example.e_almawar;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +45,7 @@ public class SiswaSchoolFragment extends Fragment {
         tvGreeting = view.findViewById(R.id.tv_greeting);
         ivProfile = view.findViewById(R.id.iv_profile);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String userName = sharedPreferences.getString("user_name", null);
 
         FirebaseUser user = mAuth.getCurrentUser();
@@ -87,13 +92,37 @@ public class SiswaSchoolFragment extends Fragment {
         iconVisimisi.setOnClickListener(v -> replaceFragment(new SiswaVisimisiFragment()));
         iconSarpras.setOnClickListener(v -> replaceFragment(new SiswaSarprasFragment()));
         iconEkstrakulikuler.setOnClickListener(v -> replaceFragment(new SiswaEkstrakulikulerFragment()));
+
+        // Tombol Lokasi
+        Button lokasiButton = view.findViewById(R.id.btn_location);
+        lokasiButton.setOnClickListener(v -> {
+            String mapsUrl = "https://maps.app.goo.gl/EVwcGq8uixrfSUQj9";
+
+            try {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl));
+                mapIntent.setPackage("com.google.android.apps.maps");
+
+                if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl));
+                    startActivity(browserIntent);
+                }
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(requireContext(), "Tidak dapat membuka Google Maps", Toast.LENGTH_SHORT).show();
+                String alamat = "Jl. Pondok Pesantren No.10, Lakomato, Kec. Kolaka";
+                Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode(alamat));
+                Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, geoUri);
+                startActivity(fallbackIntent);
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+                .replace(R.id.fragment_container, fragment) // Ganti fragment dengan ID fragment_container
+                .addToBackStack(null) // Menambah fragment ke back stack
+                .commit(); // Menjalankan transaksi
     }
 }

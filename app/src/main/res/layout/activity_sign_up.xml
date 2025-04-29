@@ -146,6 +146,17 @@
         android:textSize="16sp"
         android:layout_marginTop="20dp"/>
 
+    <!-- Tombol Sign Up with Google -->
+    <Button
+        android:id="@+id/btnSignUpGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Sign Up with Google"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/abu_abu"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"/>
+
     <!-- Link ke Login -->
     <TextView
         android:id="@+id/btnLogin"

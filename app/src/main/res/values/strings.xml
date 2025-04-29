@@ -2,5 +2,7 @@
     <string name="app_name">e-AlMawar</string>
     <string name="facility_image">Gambar fasilitas</string>
     <string name="facility_name_placeholder">Nama Fasilitas</string>
+    <string name="default_web_client_id">531601773441-tv4rvh543l1hl75g5je0ijorhtf91qb5.apps.googleusercontent.com</string>
+
 
 </resources>

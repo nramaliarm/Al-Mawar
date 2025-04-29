@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "531601773441",
+    "firebase_url": "https://e-almawar-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "e-almawar",
     "storage_bucket": "e-almawar.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.e_almawar"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "531601773441-6u2b76tf1rb26aess02kf9adt0c9qkms.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.e_almawar",
+            "certificate_hash": "3755ba39deb8aa25ab8e3ab9f9587c8041954ae0"
+          }
+        },
+        {
+          "client_id": "531601773441-tv4rvh543l1hl75g5je0ijorhtf91qb5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBTOCul-L9c9uRuUjLTiVorZv_m6F5Ri1A"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "531601773441-tv4rvh543l1hl75g5je0ijorhtf91qb5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
