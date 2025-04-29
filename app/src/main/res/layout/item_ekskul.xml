@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/ivFacilityImage"
+            android:id="@+id/ivEkskulImage"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
@@ -22,15 +22,17 @@
             android:background="@null"
             android:clipToOutline="true" />
 
+
         <TextView
-            android:id="@+id/tv_nama_fasilitas"
+            android:id="@+id/tv_nama_ekskul"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nama Sarana"
+            android:text="Nama Ekskul"
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginTop="8dp"
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"/>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

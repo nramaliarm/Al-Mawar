@@ -40,7 +40,9 @@ public class SiswaSarprasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_siswa_sarpras, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerFacilities);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        int spanCount = calculateSpanCount();
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
+
 
         tvGreeting = view.findViewById(R.id.tv_greeting);
         ivProfile = view.findViewById(R.id.iv_profile);
@@ -105,4 +107,17 @@ public class SiswaSarprasFragment extends Fragment {
                     Toast.makeText(getContext(), "Gagal memuat data sarana prasarana", Toast.LENGTH_SHORT).show();
                 });
     }
+
+    private int calculateSpanCount() {
+        float screenWidthDp = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().density;
+
+        if (screenWidthDp >= 720) {
+            return 4; // Tablet atau layar lebar
+        } else if (screenWidthDp >= 600) {
+            return 3; // Layar sedang
+        } else {
+            return 2; // Layar kecil (smartphone)
+        }
+    }
+
 }
