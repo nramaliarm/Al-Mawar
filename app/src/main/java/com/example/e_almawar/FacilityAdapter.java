@@ -10,13 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.e_almawar.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.e_almawar.viewmodel.Facility;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.FacilityViewHolder> {
+public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHolder> {
 
     private Context context;
     private List<Facility> facilityList;
@@ -28,19 +29,19 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.Facili
 
     @NonNull
     @Override
-    public FacilityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FacilityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_facility, parent, false);
-        return new FacilityViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FacilityViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FacilityAdapter.ViewHolder holder, int position) {
         Facility facility = facilityList.get(position);
-        holder.tvName.setText(facility.getTitle());
+        holder.tvNama.setText(facility.getTitle());
 
-        // Load image from URL using Picasso
-        Picasso.get()
+        Glide.with(context)
                 .load(facility.getImageUrl())
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(24)))
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.ivFacility);
@@ -51,14 +52,14 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.Facili
         return facilityList.size();
     }
 
-    public static class FacilityViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvNama;
         ImageView ivFacility;
-        TextView tvName;
 
-        public FacilityViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivFacility = itemView.findViewById(R.id.iv_facility);
-            tvName = itemView.findViewById(R.id.tv_facility_name);
+            tvNama = itemView.findViewById(R.id.tv_nama_fasilitas); // pastikan ID sama dengan layout item_facility.xml
+            ivFacility = itemView.findViewById(R.id.ivFacilityImage); // pastikan ID sama juga
         }
     }
 }
