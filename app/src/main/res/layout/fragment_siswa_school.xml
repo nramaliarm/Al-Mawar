@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradien_background">
 
-
-    <!-- ScrollView untuk konten utama -->
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -22,7 +20,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -66,7 +63,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
 
-
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="0dp"
@@ -82,6 +78,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_school_name" />
+
                 <Button
                     android:id="@+id/btn_location"
                     android:layout_width="0dp"
@@ -141,9 +138,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="80dp"
+                    android:padding="20dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="8dp"
-                    android:padding="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -162,12 +159,13 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center"
-                            android:layout_marginBottom="0dp">
+                            android:weightSum="3">
 
                             <!-- Sejarah -->
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="10dp"
@@ -190,8 +188,9 @@
 
                             <!-- Tujuan -->
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="10dp"
@@ -214,8 +213,9 @@
 
                             <!-- Visi Misi -->
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="10dp"
@@ -244,12 +244,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:weightSum="3">
 
-                            <!-- Sarana & Prasarana -->
+                            <!-- Sarana dan Prasarana -->
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="10dp"
@@ -259,21 +261,25 @@
                                     android:id="@+id/icon_sarpras"
                                     android:layout_width="80dp"
                                     android:layout_height="80dp"
+                                    android:scaleType="fitCenter"
                                     android:src="@drawable/ic_sarpras" />
 
                                 <TextView
+                                    android:id="@+id/tv_sarpras"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:text="Sarana dan Prasarana"
                                     android:textSize="14sp"
-                                    android:textColor="#000" />
+                                    android:textColor="#000"
+                                    android:textAlignment="center" />
                             </LinearLayout>
 
                             <!-- Ekstrakurikuler -->
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
                                 android:padding="10dp"
@@ -293,7 +299,39 @@
                                     android:textSize="14sp"
                                     android:textColor="#000" />
                             </LinearLayout>
+
+                            <!-- Program Unggulan -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:layout_margin="0dp">
+
+                                <ImageView
+                                    android:id="@+id/icon_unggulan"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/ic_unggulan" />
+
+                                <TextView
+                                    android:id="@+id/tv_program_unggulan"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:maxLines="1"
+                                    android:ellipsize="end"
+                                    android:layout_marginTop="10dp"
+                                    android:text="Program Unggulan"
+                                    android:textSize="14sp"
+                                    android:textColor="#000"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
                         </LinearLayout>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SiswaSchoolFragment extends Fragment {
@@ -60,9 +59,7 @@ public class SiswaSchoolFragment extends Fragment {
 
                             if (name != null) {
                                 tvGreeting.setText("Halo, " + name + "!");
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("user_name", name);
-                                editor.apply();
+                                sharedPreferences.edit().putString("user_name", name).apply();
                             }
 
                             if (imageUrl != null && !imageUrl.isEmpty()) {
@@ -86,12 +83,14 @@ public class SiswaSchoolFragment extends Fragment {
         ImageView iconVisimisi = view.findViewById(R.id.icon_visimisi);
         ImageView iconSarpras = view.findViewById(R.id.icon_sarpras);
         ImageView iconEkstrakulikuler = view.findViewById(R.id.icon_ekstrakulikuler);
+        ImageView iconUnggulan = view.findViewById(R.id.icon_unggulan); // Tambahan
 
         iconSejarah.setOnClickListener(v -> replaceFragment(new SiswaSejarahFragment()));
         iconTujuan.setOnClickListener(v -> replaceFragment(new SiswaTujuanFragment()));
         iconVisimisi.setOnClickListener(v -> replaceFragment(new SiswaVisimisiFragment()));
         iconSarpras.setOnClickListener(v -> replaceFragment(new SiswaSarprasFragment()));
         iconEkstrakulikuler.setOnClickListener(v -> replaceFragment(new SiswaEkstrakulikulerFragment()));
+        iconUnggulan.setOnClickListener(v -> replaceFragment(new SiswaUnggulanFragment())); // Tambahan
 
         // Tombol Lokasi
         Button lokasiButton = view.findViewById(R.id.btn_location);
@@ -105,15 +104,13 @@ public class SiswaSchoolFragment extends Fragment {
                 if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
                     startActivity(mapIntent);
                 } else {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl));
-                    startActivity(browserIntent);
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl)));
                 }
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(requireContext(), "Tidak dapat membuka Google Maps", Toast.LENGTH_SHORT).show();
                 String alamat = "Jl. Pondok Pesantren No.10, Lakomato, Kec. Kolaka";
                 Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode(alamat));
-                Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, geoUri);
-                startActivity(fallbackIntent);
+                startActivity(new Intent(Intent.ACTION_VIEW, geoUri));
             }
         });
     }
@@ -121,8 +118,8 @@ public class SiswaSchoolFragment extends Fragment {
     private void replaceFragment(Fragment fragment) {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment) // Ganti fragment dengan ID fragment_container
-                .addToBackStack(null) // Menambah fragment ke back stack
-                .commit(); // Menjalankan transaksi
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

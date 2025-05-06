@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +34,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.google.firebase.firestore.SetOptions;
-import java.util.Collections;
-
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -67,7 +66,6 @@ public class SignUpActivity extends AppCompatActivity {
                 .requestProfile()
                 .build();
 
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // Login dengan Email dan Password
@@ -85,29 +83,31 @@ public class SignUpActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 String uid = user.getUid();
 
-                                // Buat data pengguna untuk disimpan ke Firestore
-                                Map<String, Object> userMap = new HashMap<>();
-                                userMap.put("email", user.getEmail());
-                                userMap.put("nama", user.getDisplayName());
-                                userMap.put("role", "siswa");
+                                // Update profil pengguna dengan nama
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(nama)
+                                        .build();
 
-                                // Menyimpan URL foto profil jika ada
-                                if (user.getPhotoUrl() != null && !user.getPhotoUrl().toString().isEmpty()) {
-                                    String profileUrl = user.getPhotoUrl().toString();
-                                    userMap.put("profileUrl", profileUrl);  // Menambahkan profileUrl ke data pengguna
-                                }
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(profileTask -> {
+                                            // Buat data pengguna untuk disimpan ke Firestore
+                                            Map<String, Object> userMap = new HashMap<>();
+                                            userMap.put("email", email);
+                                            userMap.put("nama", nama);
+                                            userMap.put("role", "siswa");
 
-                                // Menyimpan data pengguna ke Firestore
-                                db.collection("users").document(uid)
-                                        .set(userMap, SetOptions.merge()) // Gunakan merge untuk menambah data tanpa menghapus yang lama
-                                        .addOnSuccessListener(aVoid -> {
-                                            Log.d("Firestore", "Data pengguna berhasil disimpan.");
-                                            startActivity(new Intent(SignUpActivity.this, SiswaHomeActivity.class));
-                                            finish();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Log.e("Firestore", "Gagal menyimpan data pengguna: " + e.getMessage());
-                                            Toast.makeText(SignUpActivity.this, "Pendaftaran gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            // Menyimpan data pengguna ke Firestore
+                                            db.collection("users").document(uid)
+                                                    .set(userMap, SetOptions.merge())
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Log.d("Firestore", "Data pengguna berhasil disimpan.");
+                                                        startActivity(new Intent(SignUpActivity.this, SiswaHomeActivity.class));
+                                                        finish();
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.e("Firestore", "Gagal menyimpan data pengguna: " + e.getMessage());
+                                                        Toast.makeText(SignUpActivity.this, "Pendaftaran gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    });
                                         });
                             } else {
                                 Log.e("SignUpActivity", "Firebase authentication failed.");
@@ -187,5 +187,4 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }
