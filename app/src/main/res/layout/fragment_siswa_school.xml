@@ -114,25 +114,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView3"
                     app:srcCompat="@drawable/almawar" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="239dp"
-                    android:layout_height="52dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="#00575050"
-                    android:fontFamily="sans-serif-black"
-                    android:shadowColor="#262424"
-                    android:shadowDx="3"
-                    android:shadowDy="3"
-                    android:shadowRadius="20"
-                    android:text="Sekolah Islam Terpadu ALMAWAR Kolaka"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.114"
-                    app:layout_constraintStart_toStartOf="parent" />
-
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

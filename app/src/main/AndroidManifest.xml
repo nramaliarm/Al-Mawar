@@ -18,6 +18,16 @@
         android:theme="@style/Theme.EAlMawar"
         tools:targetApi="31">
         <activity
+            android:name=".LoadingFragment"
+            android:exported="false"
+            android:theme="@style/Theme.EAlMawar" />
+        <activity
+            android:name=".BerhasilDaftarFragment"
+            android:exported="false" />
+        <activity
+            android:name=".UploadBekasFragment"
+            android:exported="false" />
+        <activity
             android:name=".AdminEditFormulirFragment"
             android:exported="false" />
         <activity

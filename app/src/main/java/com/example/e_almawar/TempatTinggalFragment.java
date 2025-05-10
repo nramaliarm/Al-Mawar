@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import com.google.firebase.auth.FirebaseAuth;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -94,6 +94,16 @@ public class TempatTinggalFragment extends Fragment {
     }
 
     private void submitDataKeDatabase() {
+        // Validasi input: Periksa apakah semua field sudah diisi
+        if (etAlamat.getText().toString().trim().isEmpty() ||
+                etTinggalBersama.getText().toString().trim().isEmpty() ||
+                etStatusRumah.getText().toString().trim().isEmpty()) {
+
+            // Tampilkan pesan alert jika ada field yang kosong
+            Toast.makeText(getActivity(), "Silahkan Isi Semua Data", Toast.LENGTH_SHORT).show();
+            return; // Jika ada field kosong, data tidak disimpan
+        }
+
         Map<String, Object> dataSiswa = new HashMap<>();
 
         // Data Pribadi Siswa
@@ -130,15 +140,22 @@ public class TempatTinggalFragment extends Fragment {
         dataSiswa.put("tinggalBersama", formViewModel.tinggalbersama);
         dataSiswa.put("statusRumah", formViewModel.statusrumah);
 
-        db.collection("data_siswa")
-                .add(dataSiswa)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(getActivity(), "Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
-                    Log.d("Firestore", "Data berhasil disimpan dengan ID: " + documentReference.getId());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Ambil user ID dari FirebaseAuth
 
-                    // Pindah ke fragment_siswa_home setelah berhasil simpan
+        db.collection("data_siswa")
+                .document(userId)
+                .set(dataSiswa)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getActivity(), "Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
+                    Log.d("Firestore", "Data berhasil disimpan");
+
+                    // Setelah data formulir berhasil disubmit, simpan status pengisian formulir
+                    saveFormStatusToFirestore(userId); // Menyimpan status formulir sudah diisi
+
+                    // Pindah ke UploadBerkasFragment setelah berhasil simpan
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, new SiswaHomeFragment());
+                    transaction.replace(R.id.fragment_container, new UploadBerkasFragment());
                     transaction.addToBackStack(null);
                     transaction.commit();
                 })
@@ -146,5 +163,23 @@ public class TempatTinggalFragment extends Fragment {
                     Toast.makeText(getActivity(), "Gagal menyimpan data!", Toast.LENGTH_SHORT).show();
                     Log.e("Firestore", "Gagal menyimpan data", e);
                 });
-        }
     }
+
+    private void saveFormStatusToFirestore(String userId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> formStatus = new HashMap<>();
+        formStatus.put("isFormFilled", true);  // Tandai formulir sudah diisi
+
+        db.collection("data_siswa")
+                .document(userId)
+                .update(formStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firestore", "Status formulir berhasil diperbarui");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Gagal memperbarui status formulir", e);
+                });
+    }
+
+}
