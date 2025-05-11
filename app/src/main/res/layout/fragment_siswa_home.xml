@@ -2,17 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".SiswaSarprasFragment">
 
-    <!-- ScrollView untuk konten utama -->
+    <!-- ScrollView for vertical scrolling -->
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,11 +22,12 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header -->
+            <!-- Header Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!-- Greeting Text -->
                 <TextView
                     android:id="@+id/tv_greeting"
                     android:layout_width="wrap_content"
@@ -37,13 +40,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <ImageView
                     android:id="@+id/iv_profile"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -64,6 +66,22 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/location_background"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="  Jl.Pondok Pesantren No.10, Lakomato, Kec. Kolaka"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_school_name" />
 
                 <Button
                     android:id="@+id/btn_location"
@@ -92,31 +110,70 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Content -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+            <!-- ImageView di dalam CardView -->
             <ImageView
                 android:id="@+id/imageView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/almawar" />
+                android:src="@drawable/almawar"
+                android:adjustViewBounds="true" />
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/background_visi"
-                android:gravity="center"
-                android:text="“UNGGUL DALAM IMTAQ, KOMPETITIF DALAM IPTEK DAN BERWAWASAN GLOBAL”"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <!-- FrameLayout digunakan untuk menempatkan gambar dan teks di atasnya -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Gambar dengan sudut melengkung -->
+                    <ImageView
+                        android:id="@+id/testImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/background_visi"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true" />
+
+                    <!-- Teks yang ditempatkan di atas gambar -->
+                    <TextView
+                        android:id="@+id/visi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Memuat visi dari Firebase..."
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center" /> <!-- Posisikan teks di tengah -->
+                </FrameLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <ImageView
                 android:id="@+id/imageView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/alur_pendaftaran" />

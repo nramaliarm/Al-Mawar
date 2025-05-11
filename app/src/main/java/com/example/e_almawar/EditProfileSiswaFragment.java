@@ -20,20 +20,23 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.io.InputStream;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -43,15 +46,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import java.io.InputStream;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentReference;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class EditProfileSiswaFragment extends Fragment {
 
@@ -66,7 +62,6 @@ public class EditProfileSiswaFragment extends Fragment {
     private static final String IMGUR_CLIENT_ID = "26b0a70ffb1b617"; // Ganti dengan Client-ID milikmu
 
     private FirebaseAuth mAuth;
-
     private String currentProfileImageUrl = "";
 
     @Override
@@ -82,7 +77,6 @@ public class EditProfileSiswaFragment extends Fragment {
 
         return view;
     }
-
 
     private void initViews(View view) {
         etName = view.findViewById(R.id.etName);
@@ -125,7 +119,6 @@ public class EditProfileSiswaFragment extends Fragment {
         }
     }
 
-
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -152,37 +145,77 @@ public class EditProfileSiswaFragment extends Fragment {
             return;
         }
 
-        String uid = user.getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userRef = db.collection("users").document(uid);
+        Runnable afterPasswordUpdate = () -> {
+            String uid = user.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("users").document(uid);
 
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("nama", name);
-        updates.put("email", email);
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String currentName = documentSnapshot.getString("nama");
+                    String currentEmail = documentSnapshot.getString("email");
 
-        userRef.update(updates)
-                .addOnSuccessListener(aVoid -> {
-                    updateSharedPreferences(name, email, currentProfileImageUrl);
-                    if (imageUri == null) {
+                    boolean dataBerubah = !currentName.equals(name) || !currentEmail.equals(email);
+
+                    // Jika tidak ada perubahan apa pun (nama, email, password, foto)
+                    if (!dataBerubah && imageUri == null && TextUtils.isEmpty(newPassword)) {
                         dismissProgress();
-                        Toast.makeText(getActivity(), "Profil diperbarui", Toast.LENGTH_SHORT).show();
-                        getActivity().onBackPressed();
+                        Toast.makeText(getActivity(), "Tidak ada perubahan", Toast.LENGTH_SHORT).show();
+
+                        // Navigasi balik ke fragment sebelumnya (SiswaAkunFragment)
+                        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, new SiswaAkunFragment());
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                        return;
                     }
-                })
-                .addOnFailureListener(e -> {
-                    dismissProgress();
-                    Toast.makeText(getActivity(), "Gagal memperbarui profil", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error updating Firestore", e);
-                });
 
+                    if (imageUri != null) {
+                        // Jika ada gambar yang diunggah
+                        uploadImageToImgur(imageUri);
+                    } else {
+                        // Update Firestore tanpa gambar
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("nama", name);
+                        updates.put("email", email);
 
+                        userRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    updateSharedPreferences(name, email, currentProfileImageUrl);
+                                    dismissProgress();
+                                    Toast.makeText(getActivity(), "Profil diperbarui", Toast.LENGTH_SHORT).show();
+
+                                    // Kembali ke fragment akun
+                                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragment_container, new SiswaAkunFragment());
+                                    transaction.addToBackStack(null);
+                                    transaction.commit();
+                                })
+                                .addOnFailureListener(e -> {
+                                    dismissProgress();
+                                    Toast.makeText(getActivity(), "Gagal memperbarui profil", Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "Error updating Firestore", e);
+                                });
+                    }
+                }
+            });
+        };
+
+        // Jika ada perubahan password
         if (!TextUtils.isEmpty(newPassword)) {
             if (!TextUtils.isEmpty(oldPassword)) {
                 AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPassword);
                 user.reauthenticate(credential).addOnCompleteListener(authTask -> {
                     if (authTask.isSuccessful()) {
                         user.updatePassword(newPassword).addOnCompleteListener(passwordTask -> {
-                            if (!passwordTask.isSuccessful()) {
+                            if (passwordTask.isSuccessful()) {
+                                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("user_password", newPassword);
+                                editor.apply();
+                                afterPasswordUpdate.run(); // Lanjutkan update
+                            } else {
+                                dismissProgress();
                                 Toast.makeText(getActivity(), "Gagal memperbarui kata sandi", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -194,20 +227,12 @@ public class EditProfileSiswaFragment extends Fragment {
             } else {
                 dismissProgress();
                 Toast.makeText(getActivity(), "Masukkan kata sandi lama untuk memperbarui", Toast.LENGTH_SHORT).show();
-                return;
             }
-        }
-
-
-        if (imageUri != null) {
-            uploadImageToImgur(imageUri);
         } else {
-            updateSharedPreferences(name, email, currentProfileImageUrl);
-            dismissProgress();
-            Toast.makeText(getActivity(), "Profil diperbarui", Toast.LENGTH_SHORT).show();
-            getActivity().onBackPressed();
+            afterPasswordUpdate.run(); // Tidak ada perubahan password
         }
     }
+
 
     private void uploadImageToImgur(Uri uri) {
         try {
@@ -216,45 +241,62 @@ public class EditProfileSiswaFragment extends Fragment {
             inputStream.read(imageBytes);
             inputStream.close();
 
-            String encodedImage = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+            // Log image size for debugging
+            Log.d(TAG, "Image size: " + imageBytes.length);
 
             OkHttpClient client = new OkHttpClient();
 
+            // Build the request body with the image as a multipart form
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("image", encodedImage)
+                    .addFormDataPart("image", "profile_image.jpg", RequestBody.create(MediaType.parse("image/jpeg"), imageBytes))
                     .build();
 
+            // Log the request body for debugging
+            Log.d(TAG, "Request body created");
+
+            // Create the request to Imgur API
             Request request = new Request.Builder()
                     .url("https://api.imgur.com/3/image")
                     .addHeader("Authorization", "Client-ID " + IMGUR_CLIENT_ID)
                     .post(requestBody)
                     .build();
 
+            // Execute the request asynchronously
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.e(TAG, "Upload ke Imgur gagal: " + e.getMessage());
+                    // Log the error
+                    Log.e(TAG, "Upload to Imgur failed: " + e.getMessage());
                     runOnUi(() -> {
                         dismissProgress();
-                        Toast.makeText(getActivity(), "Gagal mengunggah gambar ke Imgur", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Failed to upload image to Imgur", Toast.LENGTH_SHORT).show();
                     });
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful()) {
+                        // Log the response failure
+                        Log.e(TAG, "Upload failed: " + response.message());
                         runOnUi(() -> {
                             dismissProgress();
-                            Toast.makeText(getActivity(), "Upload gambar gagal: " + response.message(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Upload image failed: " + response.message(), Toast.LENGTH_SHORT).show();
                         });
                         return;
                     }
 
+                    // Log the successful response
                     String responseBody = response.body().string();
+                    Log.d(TAG, "Imgur response: " + responseBody);
+
                     try {
+                        // Parse the response JSON
                         JSONObject json = new JSONObject(responseBody);
                         String imageUrl = json.getJSONObject("data").getString("link");
+
+                        // Log the image URL
+                        Log.d(TAG, "Image uploaded successfully. URL: " + imageUrl);
 
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
@@ -270,34 +312,34 @@ public class EditProfileSiswaFragment extends Fragment {
                             updates.put("email", email);
                             updates.put("profileUrl", imageUrl);
 
+                            // Update the Firestore document with the new profile URL
                             userRef.update(updates)
                                     .addOnSuccessListener(aVoid -> {
                                         updateSharedPreferences(name, email, imageUrl);
                                         runOnUi(() -> {
                                             dismissProgress();
-                                            Toast.makeText(getActivity(), "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
                                             getActivity().onBackPressed();
                                         });
                                     })
                                     .addOnFailureListener(e -> {
-                                        Log.e(TAG, "Gagal memperbarui Firestore: ", e);
+                                        Log.e(TAG, "Error updating Firestore", e);
                                     });
-
                         }
-
                     } catch (JSONException e) {
+                        // Handle JSON parsing error
+                        Log.e(TAG, "Error parsing Imgur response", e);
                         runOnUi(() -> {
                             dismissProgress();
-                            Toast.makeText(getActivity(), "Gagal membaca respon server", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Error reading server response", Toast.LENGTH_SHORT).show();
                         });
                     }
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
             dismissProgress();
-            Toast.makeText(getActivity(), "Terjadi kesalahan saat membaca gambar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Error reading image", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -350,4 +392,5 @@ public class EditProfileSiswaFragment extends Fragment {
         super.onDestroy();
         if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
     }
+
 }

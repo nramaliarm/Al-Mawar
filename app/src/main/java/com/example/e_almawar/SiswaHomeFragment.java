@@ -23,10 +23,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+
 public class SiswaHomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private TextView tvGreeting;
+    private TextView tvGreeting, visiTextView;
     private ImageView ivProfile; // Tambahkan ini
 
     @Nullable
@@ -37,6 +39,7 @@ public class SiswaHomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        visiTextView = view.findViewById(R.id.visi); // Inisialisasi TextView untuk Visi
         tvGreeting = view.findViewById(R.id.tv_greeting);
         ivProfile = view.findViewById(R.id.iv_profile); // Inisialisasi ImageView
 
@@ -114,6 +117,28 @@ public class SiswaHomeFragment extends Fragment {
                 startActivity(fallbackIntent);
             }
         });
+
+        // Ambil data visi dari Firestore (hapus bagian misi)
+        db.collection("visi_misi").document("visi_misiID")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String visi = documentSnapshot.getString("visi");
+
+                        if (visi != null) {
+                            visiTextView.setText(visi);
+                        } else {
+                            visiTextView.setText("Belum ada data visi.");
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Data visi tidak ditemukan", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", e.getMessage());
+                    Toast.makeText(getContext(), "Gagal mengambil data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
         return view;
     }
 }

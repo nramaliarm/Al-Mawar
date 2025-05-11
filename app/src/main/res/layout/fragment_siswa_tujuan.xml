@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradien_background">
 
-    <!-- ScrollView untuk membuat konten bisa di-scroll -->
+    <!-- ScrollView untuk konten utama -->
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,7 +23,8 @@
             <!-- Header -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="60dp">
 
                 <TextView
                     android:id="@+id/tv_greeting"
@@ -29,7 +32,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="Halo, Syahril Ramadhan!"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -37,12 +39,11 @@
 
                 <ImageView
                     android:id="@+id/iv_profile"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_profile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,30 +62,46 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
 
-                <ImageView
-                    android:id="@+id/imageView5"
+                <!-- School Image -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/school"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_school_name"
-                    app:srcCompat="@drawable/almawar" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/tv_school_name">
+
+                    <!-- Gambar di dalam CardView -->
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/almawar" />
+
+                </androidx.cardview.widget.CardView>
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="70dp"
-                android:padding="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                android:layout_margin="8dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/school">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:paddingBottom="20dp"
                     android:padding="10dp">
 
                     <TextView
@@ -95,7 +112,8 @@
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:paddingBottom="8dp" />
+                        android:paddingBottom="8dp"
+                        android:gravity="center" />
 
                     <TextView
                         android:id="@+id/list_poin"
@@ -114,6 +132,7 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 

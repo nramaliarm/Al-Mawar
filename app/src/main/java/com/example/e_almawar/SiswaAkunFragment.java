@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,19 +25,25 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SiswaAkunFragment extends Fragment {
 
-    private Button btnLogout, btnEditProfile;
-    private TextView tvUserName, tvEmail;
+    private Button btnLogout, btnEditProfile, btnTogglePassword;
+    private TextView tvUserName, tvEmail, tvPassword;
     private ImageView ivProfile;
+    private String userPassword = "";
+    private boolean isPasswordVisible = false;
+
     private static final String TAG = "SiswaAkunFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_siswa_akun, container, false);
 
+        // onCreateView
         btnLogout = view.findViewById(R.id.btnLogout);
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        btnTogglePassword = view.findViewById(R.id.btnTogglePassword);
         tvUserName = view.findViewById(R.id.tvName);
         tvEmail = view.findViewById(R.id.tvEmail);
+        tvPassword = view.findViewById(R.id.tvPassword);
         ivProfile = view.findViewById(R.id.ivProfile);
 
         ivProfile.setImageResource(R.drawable.default_profile);
@@ -44,6 +51,7 @@ public class SiswaAkunFragment extends Fragment {
         loadUserData();
 
         btnLogout.setOnClickListener(v -> showLogoutDialog());
+
         btnEditProfile.setOnClickListener(v -> {
             EditProfileSiswaFragment editProfileFragment = new EditProfileSiswaFragment();
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -51,6 +59,12 @@ public class SiswaAkunFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
+
+        btnTogglePassword.setOnClickListener(v -> {
+            Log.d(TAG, "Tombol toggle password diklik");
+            togglePasswordVisibility();
+        });
+
 
         return view;
     }
@@ -83,38 +97,78 @@ public class SiswaAkunFragment extends Fragment {
         String userEmail = documentSnapshot.getString("email");
         String profileImageUrl = documentSnapshot.getString("profileUrl");
 
-        if (userName != null && !userName.isEmpty()) {
-            tvUserName.setText(userName);
-        }
+        // AMBIL PASSWORD DARI SHARED PREFERENCES
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        userPassword = sharedPreferences.getString("user_password", "");
 
-        if (userEmail != null && !userEmail.isEmpty()) {
+        if (!TextUtils.isEmpty(userEmail)) {
             tvEmail.setText(userEmail);
         }
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user_name", userName);
-        editor.putString("user_email", userEmail);
-        editor.putString("profile_image_url", profileImageUrl);
-        editor.apply();
+        if (!TextUtils.isEmpty(userName)) {
+            tvUserName.setText(userName);
+        }
 
+        saveToSharedPreferences(userName, userEmail, userPassword, profileImageUrl);
+
+        setHiddenPassword();
         loadImage(profileImageUrl);
     }
+
 
     private void loadFromSharedPreferences() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String userName = sharedPreferences.getString("user_name", "Tidak Tersedia");
         String userEmail = sharedPreferences.getString("user_email", "Tidak Tersedia");
         String profileImageUrl = sharedPreferences.getString("profile_image_url", "");
+        userPassword = sharedPreferences.getString("user_password", "");
 
         tvUserName.setText(userName);
         tvEmail.setText(userEmail);
 
+        setHiddenPassword();
         loadImage(profileImageUrl);
     }
 
+    private void saveToSharedPreferences(String name, String email, String password, String imageUrl) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user_name", name);
+        editor.putString("user_email", email);
+        editor.putString("user_password", password);
+        editor.putString("profile_image_url", imageUrl);
+        editor.apply();
+    }
+
+    private void setHiddenPassword() {
+        if (!TextUtils.isEmpty(userPassword)) {
+            StringBuilder hidden = new StringBuilder();
+            for (int i = 0; i < userPassword.length(); i++) {
+                hidden.append("*");
+            }
+            tvPassword.setText(hidden.toString());
+            isPasswordVisible = false;
+            btnTogglePassword.setBackgroundResource(R.drawable.ic_visible);
+        }
+    }
+
+    private void togglePasswordVisibility() {
+        if (TextUtils.isEmpty(userPassword)) {
+            Log.w(TAG, "Password kosong atau belum dimuat.");
+            return;
+        }
+
+        if (isPasswordVisible) {
+            setHiddenPassword();
+        } else {
+            tvPassword.setText(userPassword);
+            btnTogglePassword.setBackgroundResource(R.drawable.ic_invisible);
+            isPasswordVisible = true;
+        }
+    }
+
     private void loadImage(String imageUrl) {
-        if (imageUrl != null && !imageUrl.isEmpty()) {
+        if (!TextUtils.isEmpty(imageUrl)) {
             Log.d(TAG, "Memuat foto profil dari: " + imageUrl);
             Glide.with(getContext())
                     .load(imageUrl)

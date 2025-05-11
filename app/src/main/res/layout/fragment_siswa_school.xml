@@ -5,12 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradien_background">
+    android:background="@drawable/gradien_background"
+    tools:context=".SiswaSarprasFragment">
 
+    <!-- ScrollView for vertical scrolling -->
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -20,10 +22,12 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Header Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!-- Greeting Text -->
                 <TextView
                     android:id="@+id/tv_greeting"
                     android:layout_width="wrap_content"
@@ -38,10 +42,10 @@
 
                 <ImageView
                     android:id="@+id/iv_profile"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -103,30 +107,48 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_school_name" />
 
+                <!-- School Image -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/school"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="33dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+                <!-- Gambar di dalam CardView -->
                 <ImageView
                     android:id="@+id/imageView5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="33dp"
                     android:adjustViewBounds="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3"
                     app:srcCompat="@drawable/almawar" />
 
+            </androidx.cardview.widget.CardView>
+
+
+    <!-- CardView Section -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_marginBottom="80dp"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="8dp"
+                    app:cardElevation="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView5">
+                    app:layout_constraintTop_toBottomOf="@+id/school">
 
+                    <!-- LinearLayout for content inside CardView -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -134,7 +156,7 @@
                         android:gravity="center"
                         android:padding="0dp">
 
-                        <!-- Baris Pertama -->
+                        <!-- Row 1 (Horizontal LinearLayout for icons) -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -142,15 +164,14 @@
                             android:gravity="center"
                             android:weightSum="3">
 
-                            <!-- Sejarah -->
+                            <!-- Sejarah Icon -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
-                                android:padding="10dp"
-                                android:layout_margin="0dp">
+                                android:padding="10dp">
 
                                 <ImageView
                                     android:id="@+id/icon_sejarah"
@@ -167,15 +188,14 @@
                                     android:textColor="#000" />
                             </LinearLayout>
 
-                            <!-- Tujuan -->
+                            <!-- Tujuan Icon -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
-                                android:padding="10dp"
-                                android:layout_margin="0dp">
+                                android:padding="10dp">
 
                                 <ImageView
                                     android:id="@+id/icon_tujuan"
@@ -192,16 +212,14 @@
                                     android:textColor="#000" />
                             </LinearLayout>
 
-                            <!-- Visi Misi -->
+                            <!-- Visi Misi Icon -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
-                                android:padding="10dp"
-                                android:layout_margin="0dp"
-                                android:onClick="goToSejarah">
+                                android:padding="10dp">
 
                                 <ImageView
                                     android:id="@+id/icon_visimisi"
@@ -220,7 +238,7 @@
 
                         </LinearLayout>
 
-                        <!-- Baris Kedua -->
+                        <!-- Row 2 (Horizontal LinearLayout for icons) -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -228,15 +246,14 @@
                             android:gravity="center"
                             android:weightSum="3">
 
-                            <!-- Sarana dan Prasarana -->
+                            <!-- Sarana dan Prasarana Icon -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
-                                android:padding="10dp"
-                                android:layout_margin="0dp">
+                                android:padding="10dp">
 
                                 <ImageView
                                     android:id="@+id/icon_sarpras"
@@ -256,7 +273,7 @@
                                     android:textAlignment="center" />
                             </LinearLayout>
 
-                            <!-- Ekstrakurikuler -->
+                            <!-- Ekstrakurikuler Icon -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -281,15 +298,14 @@
                                     android:textColor="#000" />
                             </LinearLayout>
 
-                            <!-- Program Unggulan -->
+                            <!-- Program Unggulan Icon -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center"
-                                android:padding="10dp"
-                                android:layout_margin="0dp">
+                                android:padding="10dp">
 
                                 <ImageView
                                     android:id="@+id/icon_unggulan"
@@ -302,7 +318,6 @@
                                     android:id="@+id/tv_program_unggulan"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:maxLines="1"
                                     android:ellipsize="end"
                                     android:layout_marginTop="10dp"
                                     android:text="Program Unggulan"

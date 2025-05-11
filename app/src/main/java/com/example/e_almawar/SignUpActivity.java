@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,13 +25,13 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.google.firebase.firestore.SetOptions;
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private GoogleSignInClient mGoogleSignInClient;
+
     private static final int RC_SIGN_IN = 9001;  // Unique request code for Google Sign-In
 
     @Override
@@ -73,43 +74,60 @@ public class SignUpActivity extends AppCompatActivity {
                         .addOnCompleteListener(this, task -> {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                String uid = user.getUid();
+                                if (user != null) {
+                                    String uid = user.getUid();
 
-                                // Update profil pengguna dengan nama
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(nama)
-                                        .build();
+                                    // Update profil pengguna dengan nama
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(nama)
+                                            .build();
 
-                                user.updateProfile(profileUpdates)
-                                        .addOnCompleteListener(profileTask -> {
-                                            // Buat data pengguna untuk disimpan ke Firestore
-                                            Map<String, Object> userMap = new HashMap<>();
-                                            userMap.put("email", email);
-                                            userMap.put("nama", nama);
-                                            userMap.put("role", "siswa");
+                                    user.updateProfile(profileUpdates)
+                                            .addOnCompleteListener(profileTask -> {
+                                                // Buat data pengguna untuk disimpan ke Firestore
+                                                Map<String, Object> userMap = new HashMap<>();
+                                                userMap.put("email", email);
+                                                userMap.put("nama", nama);
+                                                userMap.put("role", "siswa");
 
-                                            // Menyimpan data pengguna ke Firestore
-                                            db.collection("users").document(uid)
-                                                    .set(userMap, SetOptions.merge())
-                                                    .addOnSuccessListener(aVoid -> {
-                                                        Log.d("Firestore", "Data pengguna berhasil disimpan.");
-                                                        startActivity(new Intent(SignUpActivity.this, SiswaHomeActivity.class));
-                                                        finish();
-                                                    })
-                                                    .addOnFailureListener(e -> {
-                                                        Log.e("Firestore", "Gagal menyimpan data pengguna: " + e.getMessage());
-                                                        Toast.makeText(SignUpActivity.this, "Pendaftaran gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    });
-                                        });
+                                                // Menyimpan data pengguna ke Firestore
+                                                db.collection("users").document(uid)
+                                                        .set(userMap, SetOptions.merge())
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            Log.d("Firestore", "Data pengguna berhasil disimpan.");
+
+                                                            SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
+                                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                            editor.putString("user_name", nama);
+                                                            editor.putString("user_email", email);
+                                                            editor.putString("user_password", password); // ← Simpan password di sini kalau kamu memang butuh
+                                                            editor.apply();
+
+                                                            startActivity(new Intent(SignUpActivity.this, SiswaHomeActivity.class));
+                                                            finish();
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.e("Firestore", "Gagal menyimpan data pengguna: " + e.getMessage());
+                                                            Toast.makeText(SignUpActivity.this, "Pendaftaran gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        });
+                                            });
+                                }
                             } else {
-                                Log.e("SignUpActivity", "Firebase authentication failed.");
-                                Toast.makeText(SignUpActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                String errorMessage = task.getException().getMessage();
+                                if (errorMessage.contains("The email address is already in use by another account")) {
+                                    Toast.makeText(SignUpActivity.this, "Email sudah terdaftar!", Toast.LENGTH_SHORT).show();
+                                } else if (errorMessage.contains("The given password is invalid")) {
+                                    Toast.makeText(SignUpActivity.this, "Password terlalu lemah! Gunakan password yang lebih kuat.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.e("SignUpActivity", "Firebase authentication failed: " + errorMessage);
+                                    Toast.makeText(SignUpActivity.this, "Pendaftaran gagal: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
             }
         });
 
-        // Sign Up with Google
+// Sign Up with Google
         btnSignUpGoogle.setOnClickListener(v -> {
             // Memastikan sign-out dulu sebelum memulai Google Sign-In
             mGoogleSignInClient.signOut()
@@ -119,6 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                     });
         });
+
 
         btnLogin.setOnClickListener(v -> {
             startActivity(new Intent(SignUpActivity.this, MainActivity.class)); // Navigasi ke login
@@ -138,7 +157,10 @@ public class SignUpActivity extends AppCompatActivity {
                             GoogleSignInAccount account = task.getResult();
                             firebaseAuthWithGoogle(account.getIdToken());  // Menggunakan idToken untuk autentikasi Firebase
                         } else {
-                            Toast.makeText(SignUpActivity.this, "Google Sign-In failed", Toast.LENGTH_SHORT).show();
+                            // Improved logging and specific error message
+                            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                            Log.e("GoogleSignIn", "Google Sign-In failed: " + errorMessage);
+                            Toast.makeText(SignUpActivity.this, "Google Sign-In failed: " + errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -164,18 +186,31 @@ public class SignUpActivity extends AppCompatActivity {
 
                         // Simpan data pengguna ke Firestore
                         db.collection("users").document(uid)
-                                .set(userMap, SetOptions.merge()) // Menambahkan atau memperbarui data pengguna di Firestore
+                                .set(userMap, SetOptions.merge())
                                 .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(SignUpActivity.this, "Pendaftaran Google Berhasil!", Toast.LENGTH_SHORT).show();
+                                    Log.d("Firestore", "Data pengguna berhasil disimpan.");
+
+                                    // ✅ Tambahkan ini untuk menyimpan ke SharedPreferences
+                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("user_name", user.getDisplayName());
+                                    editor.putString("user_email", user.getEmail());
+                                    editor.putString("user_password", "");  // Jangan simpan password di SharedPreferences!
+                                    editor.apply();
+
                                     startActivity(new Intent(SignUpActivity.this, SiswaHomeActivity.class));
                                     finish();
                                 })
+
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(SignUpActivity.this, "Gagal menyimpan ke Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     Log.e("FirestoreError", e.getMessage());
                                 });
                     } else {
-                        Toast.makeText(SignUpActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        // Handle authentication failure here
+                        String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                        Log.e("FirebaseAuth", "Authentication failed: " + errorMessage);
+                        Toast.makeText(SignUpActivity.this, "Authentication failed: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

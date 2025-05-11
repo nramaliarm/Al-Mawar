@@ -76,4 +76,5 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:17.0.0")
     implementation("com.google.android.gms:play-services-location:17.0.0")
     implementation ("com.airbnb.android:lottie:5.2.0")
+    implementation ("androidx.activity:activity-ktx:1.3.1")
 }

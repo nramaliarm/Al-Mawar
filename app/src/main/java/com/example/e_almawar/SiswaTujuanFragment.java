@@ -1,113 +1,144 @@
 package com.example.e_almawar;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
-import android.text.SpannableStringBuilder;
-import android.text.style.LeadingMarginSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SiswaTujuanFragment extends Fragment {
 
     private FirebaseFirestore db;
-    private TextView tvGreeting, textView;
+    private TextView textView;
+    private TextView tvNamaSiswa;
+    private ImageView ivProfile;
+    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_siswa_tujuan, container, false);
 
-        // Inisialisasi TextView
-        tvGreeting = view.findViewById(R.id.tv_greeting);
         textView = view.findViewById(R.id.list_poin);
+        ivProfile = view.findViewById(R.id.iv_profile);
+        tvNamaSiswa = view.findViewById(R.id.tv_greeting);
 
-        // Inisialisasi Firebase Firestore
+        mAuth = FirebaseAuth.getInstance();  // Initialize FirebaseAuth
         db = FirebaseFirestore.getInstance();
 
-        // Tampilkan nama user dari SharedPreferences
-        tampilkanNamaPengguna();
-
-        // Load data tujuan sekolah dari Firestore
-        loadTujuanSekolah();
+        loadSchoolGoals();
+        loadUserData();  // Added method to load user data
 
         return view;
     }
 
-    private void tampilkanNamaPengguna() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        String userName = sharedPreferences.getString("user_name", null);
-
-        if (userName != null) {
-            tvGreeting.setText("Halo, " + userName + "!");
-        } else {
-            tvGreeting.setText("Halo!");
-        }
-    }
-
-    private void loadTujuanSekolah() {
+    private void loadSchoolGoals() {
         db.collection("TujuanSekolah").document("TujuanID")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            // Ambil tujuan sekolah dari Firestore
-                            List<String> tujuanList = (List<String>) documentSnapshot.get("tujuan_sekolah");
-
-                            if (tujuanList != null && !tujuanList.isEmpty()) {
-                                tampilkanDenganNomor(tujuanList);
-                            } else {
-                                textView.setText("Data tujuan kosong.");
-                            }
-                        } else {
+                .addOnSuccessListener(documentSnapshot -> {
+                    try {
+                        if (!documentSnapshot.exists()) {
                             textView.setText("Dokumen tidak ditemukan.");
+                            return;
                         }
+
+                        Object rawTujuan = documentSnapshot.get("tujuan_sekolah");
+                        List<String> goalsList = new ArrayList<>();
+
+                        if (rawTujuan instanceof Map) {
+                            Map<String, Object> tujuanMap = (Map<String, Object>) rawTujuan;
+                            for (int i = 0; i < tujuanMap.size(); i++) {
+                                Object value = tujuanMap.get(String.valueOf(i));
+                                if (value != null) {
+                                    goalsList.add(value.toString());
+                                }
+                            }
+                        } else if (rawTujuan instanceof List) {
+                            goalsList = (List<String>) rawTujuan;
+                        } else {
+                            textView.setText("Format data tidak valid.");
+                            return;
+                        }
+
+                        displayNumberedGoals(removeDuplicateGoals(goalsList));
+                    } catch (Exception e) {
+                        textView.setText("Gagal memproses data.");
+                        Log.e("TujuanSekolah", "Error parsing data: " + e.getMessage());
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        textView.setText("Gagal mengambil data: " + e.getMessage());
-                    }
+                .addOnFailureListener(e -> {
+                    textView.setText("Gagal mengambil data.");
+                    Log.e("TujuanSekolah", "Load failed: " + e.getMessage());
                 });
     }
 
-    private void tampilkanDenganNomor(List<String> listTujuan) {
-        SpannableStringBuilder builder = new SpannableStringBuilder();
+    private List<String> removeDuplicateGoals(List<String> originalList) {
+        List<String> cleanedList = new ArrayList<>();
+        for (String goal : originalList) {
+            if (!cleanedList.contains(goal.trim())) {
+                cleanedList.add(goal.trim());
+            }
+        }
+        return cleanedList;
+    }
 
-        // Menentukan jarak nomor dan teks penjelasan
-        int nomorWidth = 40; // Menyesuaikan lebar indentasi untuk nomor
+    private void loadUserData() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("users").document(uid).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String name = documentSnapshot.getString("nama");
+                            String imageUrl = documentSnapshot.getString("profileUrl");
 
-        for (int i = 0; i < listTujuan.size(); i++) {
-            String nomor = (i + 1) + ". "; // Nomor tanpa kurung
-            String isi = listTujuan.get(i).trim();
+                            if (name != null && !name.isEmpty()) {
+                                tvNamaSiswa.setText("Halo, " + name + "!");
+                            }
 
-            // Gabungkan nomor dan isi dengan jarak yang konsisten
-            SpannableStringBuilder itemBuilder = new SpannableStringBuilder(nomor + isi + "\n\n");
-            itemBuilder.setSpan(new LeadingMarginSpan.Standard(nomorWidth, nomorWidth),
-                    0, itemBuilder.length(), 0);
+                            if (imageUrl != null && !imageUrl.isEmpty()) {
+                                Glide.with(requireContext())
+                                        .load(imageUrl)
+                                        .placeholder(R.drawable.ic_profile)
+                                        .error(R.drawable.ic_profile)
+                                        .circleCrop()
+                                        .into(ivProfile);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("UserData", "Error loading user data: " + e.getMessage());
+                    });
+        }
+    }
 
-            builder.append(itemBuilder);
+    private void displayNumberedGoals(List<String> goalsList) {
+        StringBuilder builder = new StringBuilder();
+        String indent = "    "; // 4 spaces for alignment
+
+        for (int i = 0; i < goalsList.size(); i++) {
+            String goal = goalsList.get(i);
+            // Format with proper numbering and indentation
+            builder.append(String.format("%d.%s\n\n", i + 1, goal));
         }
 
-        textView.setText(builder);
+        textView.setText(builder.toString());
 
-        // Mengatur justification (rata kiri-kanan) untuk Android 8+ ke atas
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             textView.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
         }

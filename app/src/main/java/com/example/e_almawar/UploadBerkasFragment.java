@@ -61,9 +61,6 @@ public class UploadBerkasFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Cek apakah user sudah upload semua berkas
-        checkAllFieldsUploaded();
-
         int[] buttonIds = {
                 R.id.btn_foto_diri, R.id.btn_ktp, R.id.btn_akta, R.id.btn_kk,
                 R.id.btn_ijazah, R.id.btn_ktp_ortu, R.id.btn_kip
@@ -142,7 +139,6 @@ public class UploadBerkasFragment extends Fragment {
                     counter[0]++;
                     if (counter[0] == selectedImageUris.size()) {
                         saveToFirestore(uploadedUrls);
-                        checkAllFieldsUploaded();  // Periksa status upload berkas
                     }
                 }
 
@@ -220,63 +216,20 @@ public class UploadBerkasFragment extends Fragment {
                     View rootView = getView();
                     if (rootView != null) {
                         Toast.makeText(getActivity(), "Berkas berhasil diupload!", Toast.LENGTH_SHORT).show();
+
+                        // Arahkan ke BerhasilDaftarFragment setelah berkas berhasil diupload
+                        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, new BerhasilDaftarFragment());
+                        transaction.addToBackStack(null);  // Menambahkan transaksi ke backstack agar pengguna bisa menekan back untuk kembali
+                        transaction.commit();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Gagal menyimpan data", Toast.LENGTH_SHORT).show();
                 });
+
     }
 
-    private void checkAllFieldsUploaded() {
-        showLoadingFragment();  // Tampilkan fragment loading
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // Ambil data berkas dari Firestore
-        db.collection("data_siswa").document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // Mengecek apakah semua berkas telah diupload
-                        boolean allFieldsUploaded = true;
-                        for (String key : fieldKeys) {
-                            if (documentSnapshot.getString(key) == null) {
-                                allFieldsUploaded = false;
-                                break;
-                            }
-                        }
-
-                        // Arahkan ke FragmentBerhasilDaftar jika semua berkas sudah diupload
-                        if (allFieldsUploaded) {
-                            // Sembunyikan loading dan tampilkan BerhasilDaftarFragment
-                            hideLoadingFragment();
-                        } else {
-                            // Sembunyikan loading dan tampilkan UploadBerkasFragment
-                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.fragment_container, new UploadBerkasFragment());
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Gagal memeriksa status berkas.", Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    private void showLoadingFragment() {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new LoadingFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    private void hideLoadingFragment() {
-        // Ganti fragment loading dengan fragment berhasil daftar
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new BerhasilDaftarFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
 
 
     private interface ImgurCallback {

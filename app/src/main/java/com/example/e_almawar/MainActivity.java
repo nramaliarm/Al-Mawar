@@ -89,10 +89,12 @@ public class MainActivity extends AppCompatActivity {
                                             String role = documentSnapshot.getString("role");
 
                                             if (role != null && role.equals("siswa")) {
+                                                // Save the email and password in SharedPreferences
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                                 editor.putBoolean("isLoggedIn", true);
                                                 editor.putString("user_name", nama);
                                                 editor.putString("user_email", emailUser);
+                                                editor.putString("user_password", password); // Save the password
                                                 editor.apply();
 
                                                 startActivity(new Intent(MainActivity.this, SiswaHomeActivity.class));
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         });
+
 
         // Login dengan Google
         btnLoginGoogle.setOnClickListener(v -> {
