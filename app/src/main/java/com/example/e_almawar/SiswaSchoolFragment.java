@@ -83,14 +83,17 @@ public class SiswaSchoolFragment extends Fragment {
         ImageView iconVisimisi = view.findViewById(R.id.icon_visimisi);
         ImageView iconSarpras = view.findViewById(R.id.icon_sarpras);
         ImageView iconEkstrakulikuler = view.findViewById(R.id.icon_ekstrakulikuler);
-        ImageView iconUnggulan = view.findViewById(R.id.icon_unggulan); // Tambahan
+        ImageView iconUnggulan = view.findViewById(R.id.icon_unggulan);
+        ImageView iconGuru = view.findViewById(R.id.icon_guru);
+
 
         iconSejarah.setOnClickListener(v -> replaceFragment(new SiswaSejarahFragment()));
         iconTujuan.setOnClickListener(v -> replaceFragment(new SiswaTujuanFragment()));
         iconVisimisi.setOnClickListener(v -> replaceFragment(new SiswaVisimisiFragment()));
         iconSarpras.setOnClickListener(v -> replaceFragment(new SiswaSarprasFragment()));
         iconEkstrakulikuler.setOnClickListener(v -> replaceFragment(new SiswaEkstrakulikulerFragment()));
-        iconUnggulan.setOnClickListener(v -> replaceFragment(new SiswaUnggulanFragment())); // Tambahan
+        iconUnggulan.setOnClickListener(v -> replaceFragment(new SiswaUnggulanFragment()));
+        iconGuru.setOnClickListener(v -> replaceFragment(new DataGuruFragment()));
 
         // Tombol Lokasi
         Button lokasiButton = view.findViewById(R.id.btn_location);

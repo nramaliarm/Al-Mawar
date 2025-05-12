@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradien_background">
+    android:background="@drawable/background">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_marginBottom="60dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,21 +24,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_bold"
+                android:gravity="center"
+                android:paddingBottom="10dp"
                 android:text="Pendaftaran Sekolah"
                 android:textSize="24sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:paddingBottom="10dp"/>
+                android:textStyle="bold" />
+
+            <!-- Form Container -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="45dp"
+                android:layout_marginHorizontal="4dp"
+                android:elevation="4dp"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/cardview">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="550dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/formulir_background"
-                android:elevation="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:radius="12dp">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -52,49 +61,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@android:color/black" />
+                    android:background="@color/textPrimary" />
 
                 <!-- Nama Wali -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
                     android:text="Nama Wali"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etNamaWali"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Nama Wali"
-                    android:inputType="text"
-                    android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    app:hintEnabled="false"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNamaWali"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Masukkan Nama Wali"
+                        android:inputType="text"
+                        android:minHeight="48dp"
+                        android:padding="8dp"
+                        android:textSize="16sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Pendidikan Wali -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_bold"
                     android:text="Pendidikan Wali"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etPendidikanWali"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Pendidikan Wali"
-                    android:inputType="text"
-                    android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    app:hintEnabled="false"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPendidikanWali"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Masukkan Pendidikan Wali"
+                        android:inputType="text"
+                        android:minHeight="48dp"
+                        android:padding="8dp"
+                        android:textSize="16sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Pekerjaan Wali -->
                 <TextView
@@ -106,19 +129,25 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etPekerjaanWali"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Pekerjaan Wali"
-                    android:inputType="text"
-                    android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    app:hintEnabled="false"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <!-- Penghasilan -->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPekerjaanWali"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Masukkan Pekerjaan Wali"
+                        android:inputType="text"
+                        android:minHeight="48dp"
+                        android:padding="8dp"
+                        android:textSize="16sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Penghasilan Wali -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -128,19 +157,25 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etPenghasilanWali"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Penghasilan Wali"
-                    android:inputType="number"
-                    android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    app:hintEnabled="false"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <!-- Nomor Handphone -->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPenghasilanWali"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Masukkan Penghasilan Wali"
+                        android:inputType="number"
+                        android:minHeight="48dp"
+                        android:padding="8dp"
+                        android:textSize="16sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Nomor Handphone Wali -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -150,17 +185,23 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etNomorHandphoneWali"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/background_input"
-                    android:hint="Masukkan Nomor Handphone Wali"
-                    android:inputType="phone"
-                    android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
+                    app:hintEnabled="false"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNomorHandphoneWali"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Masukkan Nomor Handphone Wali"
+                        android:inputType="phone"
+                        android:minHeight="48dp"
+                        android:padding="8dp"
+                        android:textSize="16sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Tombol Navigasi -->
                 <LinearLayout
@@ -174,26 +215,26 @@
                         android:id="@+id/btn_prev"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="1dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@android:color/darker_gray"
                         android:fontFamily="@font/inter_bold"
-                        android:text="❮ Sebelumnya" />
+                        android:backgroundTint="@android:color/darker_gray"
+                        android:text="❮ Sebelumnya"
+                        android:layout_marginEnd="1dp"/>
 
                     <Button
                         android:id="@+id/btn_next"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@android:color/holo_orange_light"
                         android:fontFamily="@font/inter_bold"
-                        android:text="Selanjutnya ❯" />
+                        android:backgroundTint="@android:color/holo_orange_light"
+                        android:text="Selanjutnya ❯"
+                        android:layout_marginStart="5dp"/>
 
                 </LinearLayout>
 
             </LinearLayout>
-
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
 

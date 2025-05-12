@@ -1,10 +1,6 @@
 package com.example.e_almawar;
 
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +50,7 @@ public class SiswaTujuanFragment extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     try {
                         if (!documentSnapshot.exists()) {
-                            textView.setText("Dokumen tidak ditemukan.");
+                            textView.setText(getString(R.string.document_not_found));
                             return;
                         }
 
@@ -71,29 +68,27 @@ public class SiswaTujuanFragment extends Fragment {
                         } else if (rawTujuan instanceof List) {
                             goalsList = (List<String>) rawTujuan;
                         } else {
-                            textView.setText("Format data tidak valid.");
+                            textView.setText(getString(R.string.invalid_data_format));
                             return;
                         }
 
                         displayNumberedGoals(removeDuplicateGoals(goalsList));
                     } catch (Exception e) {
-                        textView.setText("Gagal memproses data.");
-                        Log.e("TujuanSekolah", "Error parsing data: " + e.getMessage());
+                        textView.setText(getString(R.string.processing_error));
                     }
                 })
                 .addOnFailureListener(e -> {
-                    textView.setText("Gagal mengambil data.");
-                    Log.e("TujuanSekolah", "Load failed: " + e.getMessage());
+                    textView.setText(getString(R.string.data_load_failed));
                 });
     }
 
     private List<String> removeDuplicateGoals(List<String> originalList) {
         List<String> cleanedList = new ArrayList<>();
-        for (String goal : originalList) {
+        originalList.forEach(goal -> {
             if (!cleanedList.contains(goal.trim())) {
                 cleanedList.add(goal.trim());
             }
-        }
+        });
         return cleanedList;
     }
 
@@ -108,7 +103,7 @@ public class SiswaTujuanFragment extends Fragment {
                             String imageUrl = documentSnapshot.getString("profileUrl");
 
                             if (name != null && !name.isEmpty()) {
-                                tvNamaSiswa.setText("Halo, " + name + "!");
+                                tvNamaSiswa.setText(getString(R.string.greeting_message, name));
                             }
 
                             if (imageUrl != null && !imageUrl.isEmpty()) {
@@ -129,18 +124,15 @@ public class SiswaTujuanFragment extends Fragment {
 
     private void displayNumberedGoals(List<String> goalsList) {
         StringBuilder builder = new StringBuilder();
-        String indent = "    "; // 4 spaces for alignment
 
-        for (int i = 0; i < goalsList.size(); i++) {
-            String goal = goalsList.get(i);
-            // Format with proper numbering and indentation
-            builder.append(String.format("%d.%s\n\n", i + 1, goal));
+        // Menambahkan setiap tujuan tanpa nomor
+        for (String goal : goalsList) {
+            builder.append(goal);  // Tidak perlu penomoran
+            builder.append("\n\n");  // Tambahkan jarak antar item
         }
 
         textView.setText(builder.toString());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            textView.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
-        }
     }
+
+
 }

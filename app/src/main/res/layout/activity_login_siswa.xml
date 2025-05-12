@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="@android:color/white">
+    android:background="@drawable/login_background">
 
     <!-- Tombol Kembali -->
     <ImageView
-        android:id="@+id/btnBack"
+        android:id="@+id/btnB"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/arrowww"
+        android:src="@drawable/arrow"
         android:contentDescription="Kembali"
         android:padding="8dp"
-        android:clickable="true"
-        android:focusable="true" />
+        android:tint="@color/btnb"/>
 
     <!-- Logo -->
     <ImageView
@@ -26,7 +24,7 @@
         android:contentDescription="Logo Sekolah"
         android:scaleType="fitCenter"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"/>
 
     <!-- Judul -->
     <TextView
@@ -35,7 +33,6 @@
         android:text="Login Siswa"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
         android:layout_marginTop="15dp"
         android:layout_gravity="start" />
 
@@ -56,7 +53,7 @@
             android:src="@drawable/arroba"
             android:contentDescription="Ikon Email"
             android:layout_marginStart="10dp"
-            android:tint="@color/black" />
+            android:tint="@color/textPrimary" />
 
         <!-- Input Email -->
         <EditText
@@ -64,12 +61,12 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:hint="Email/No Telepon"
+            android:hint="Email"
             android:padding="12dp"
             android:textSize="16sp"
             android:background="@null"
             android:inputType="textEmailAddress"
-            android:backgroundTint="@color/gray" />
+            android:textColor="@color/textPrimary"/>
     </LinearLayout>
 
     <!-- Wrapper Input Password -->
@@ -89,7 +86,7 @@
             android:src="@drawable/padlock"
             android:contentDescription="Ikon Password"
             android:layout_marginStart="10dp"
-            app:tint="@color/black" />
+            android:tint="@color/textPrimary"/>
 
         <!-- Input Password -->
         <EditText
@@ -102,7 +99,7 @@
             android:textSize="16sp"
             android:background="@null"
             android:inputType="textPassword"
-            android:backgroundTint="@color/gray"/>
+            android:textColor="@color/textPrimary"/>
     </LinearLayout>
 
     <!-- Lupa Password -->
@@ -144,9 +141,9 @@
         android:id="@+id/btnLoginGoogle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Login with Google"
+        android:text="Login With Google"
         android:textColor="@android:color/white"
-        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/abu_abu"
         android:textSize="16sp"
         android:layout_marginTop="20dp" />
 

@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradien_background">
+    android:background="@drawable/background">
 
 
     <!-- ScrollView untuk konten utama -->
@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -46,6 +46,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,7 +57,7 @@
                     android:layout_marginTop="24dp"
                     android:fontFamily="sans-serif-black"
                     android:text="Profile Sekolah"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -92,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/cardview"
                     app:cardElevation="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -112,7 +114,7 @@
                             android:text="Sejarah"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="@color/textPrimary"
                             android:paddingBottom="8dp"
                             android:gravity="center" />
 
@@ -123,7 +125,7 @@
                             android:padding="8dp"
                             android:textSize="16sp"
                             android:lineSpacingExtra="4dp"
-                            android:textColor="@color/black"
+                            android:textColor="@color/textPrimary"
                             android:justificationMode="inter_word"
                             android:text="Memuat data..." />
 

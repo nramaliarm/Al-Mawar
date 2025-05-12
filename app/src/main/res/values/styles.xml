@@ -12,6 +12,15 @@
         <item name="android:windowDisablePreview">true</item> <!-- Ini biar icon aplikasi gak muncul -->
     </style>
 
+    <style name="DetailText">
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#333333</item>
+    </style>
+
+    <style name="CustomCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/cardview</item>
+    </style>
 
 
 </resources>

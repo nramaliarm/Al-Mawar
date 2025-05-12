@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -184,7 +185,7 @@ public class SiswaAkunFragment extends Fragment {
     }
 
     private void showLogoutDialog() {
-        new AlertDialog.Builder(getContext())
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setTitle("Logout")
                 .setMessage("Apakah Anda yakin ingin keluar?")
                 .setCancelable(false)
@@ -201,7 +202,15 @@ public class SiswaAkunFragment extends Fragment {
                 })
                 .setNegativeButton("Tidak", null)
                 .show();
+
+        // Atur latar belakang agar pakai bg_dialog_rounded.xml
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(
+                    ContextCompat.getDrawable(getContext(), R.drawable.bg_dialog_rounded)
+            );
+        }
     }
+
 
     @Override
     public void onResume() {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".SiswaSarprasFragment">
+    tools:context=".DataGuruFragment">
 
     <!-- ScrollView for vertical scrolling -->
     <ScrollView
@@ -108,7 +108,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
 
                     <!-- RecyclerView Title -->
                     <TextView
@@ -116,15 +117,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Sarana dan Prasarana"
+                        android:text="Daftar Guru"
                         android:textColor="@color/textPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:paddingTop="3dp" />
 
-                    <!-- RecyclerView for displaying data -->
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerFacilities"
+                        android:id="@+id/recyclerGuru"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -135,5 +135,4 @@
 
         </LinearLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/background"
     tools:context=".SiswaSarprasFragment">
 
     <!-- ScrollView for vertical scrolling -->
@@ -35,7 +35,7 @@
                     android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-medium"
                     android:text=""
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -47,6 +47,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,7 +60,7 @@
                     android:gravity="center"
                     android:text="Sekolah Islam Terpadu ALMAWAR Kolaka"
                     android:textAlignment="textStart"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -67,28 +68,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/location_background"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="  Jl.Pondok Pesantren No.10, Lakomato, Kec. Kolaka"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_school_name" />
-
                 <Button
                     android:id="@+id/btn_location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:backgroundTint="@color/orange"
+                    android:backgroundTint="@color/buttonOrange"
                     android:drawableEnd="@drawable/ic_lokasi2"
                     android:drawablePadding="8dp"
                     android:gravity="start|center_vertical"
@@ -184,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="100dp"
-                android:backgroundTint="@color/orange"
+                android:backgroundTint="@color/buttonOrange"
                 android:fontFamily="sans-serif-black"
                 android:padding="16dp"
                 android:shadowColor="#3C3A3A"

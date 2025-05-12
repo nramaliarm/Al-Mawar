@@ -13,21 +13,20 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/ivFacilityImage"
+            android:id="@+id/ivGuruImage"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="180dp"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:background="@null"
             android:clipToOutline="true" />
 
         <TextView
-            android:id="@+id/tv_nama_fasilitas"
+            android:id="@+id/tv_nama_guru"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Nama Sarana"
-            android:textColor="@color/textPrimary"
+            android:text="Nama Guru"
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_gravity="center_horizontal"

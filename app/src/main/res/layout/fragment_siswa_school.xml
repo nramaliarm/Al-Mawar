@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradien_background"
+    android:background="@drawable/background"
     tools:context=".SiswaSarprasFragment">
 
     <!-- ScrollView for vertical scrolling -->
@@ -35,7 +35,7 @@
                     android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-medium"
                     android:text=""
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -47,6 +47,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,7 +60,7 @@
                     android:gravity="center"
                     android:text="Sekolah Islam Terpadu ALMAWAR Kolaka"
                     android:textAlignment="textStart"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -67,28 +68,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/location_background"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="  Jl.Pondok Pesantren No.10, Lakomato, Kec. Kolaka"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_school_name" />
-
                 <Button
                     android:id="@+id/btn_location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:backgroundTint="@color/orange"
+                    android:backgroundTint="@color/buttonOrange"
                     android:drawableEnd="@drawable/ic_lokasi2"
                     android:drawablePadding="8dp"
                     android:gravity="start|center_vertical"
@@ -114,12 +99,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginTop="33dp"
+                    android:layout_marginTop="16dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3">
+                    app:layout_constraintTop_toBottomOf="@+id/btn_location">
 
                 <!-- Gambar di dalam CardView -->
                 <ImageView
@@ -132,7 +117,7 @@
             </androidx.cardview.widget.CardView>
 
 
-    <!-- CardView Section -->
+                <!-- CardView Section -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -143,6 +128,7 @@
                     android:padding="10dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="5dp"
+                    app:cardBackgroundColor="@color/cardview"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -185,7 +171,7 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Sejarah"
                                     android:textSize="14sp"
-                                    android:textColor="#000" />
+                                    android:textColor="@color/textPrimary" />
                             </LinearLayout>
 
                             <!-- Tujuan Icon -->
@@ -209,7 +195,7 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Tujuan"
                                     android:textSize="14sp"
-                                    android:textColor="#000" />
+                                    android:textColor="@color/textPrimary" />
                             </LinearLayout>
 
                             <!-- Visi Misi Icon -->
@@ -233,7 +219,7 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Visi dan Misi"
                                     android:textSize="14sp"
-                                    android:textColor="#000" />
+                                    android:textColor="@color/textPrimary" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -269,7 +255,7 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Sarana dan Prasarana"
                                     android:textSize="14sp"
-                                    android:textColor="#000"
+                                    android:textColor="@color/textPrimary"
                                     android:textAlignment="center" />
                             </LinearLayout>
 
@@ -295,7 +281,7 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Ekstrakurikuler"
                                     android:textSize="14sp"
-                                    android:textColor="#000" />
+                                    android:textColor="@color/textPrimary" />
                             </LinearLayout>
 
                             <!-- Program Unggulan Icon -->
@@ -322,10 +308,41 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Program Unggulan"
                                     android:textSize="14sp"
-                                    android:textColor="#000"
+                                    android:textColor="@color/textPrimary"
                                     android:textAlignment="center" />
                             </LinearLayout>
+                        </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:weightSum="3">
+
+                            <!-- Daftar Guru Icon -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="10dp">
+
+                                <ImageView
+                                    android:id="@+id/icon_guru"
+                                    android:layout_width="80dp"
+                                    android:layout_height="80dp"
+                                    android:src="@drawable/ic_guru" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:text="Daftar Guru"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/textPrimary" />
+                            </LinearLayout>
                         </LinearLayout>
 
                     </LinearLayout>

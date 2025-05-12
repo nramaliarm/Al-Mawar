@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.e_almawar">
     <!-- Menambahkan izin akses untuk menyimpan dan membaca gambar -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -20,6 +20,26 @@
         android:theme="@style/Theme.EAlMawar"
         tools:targetApi="31">
         <activity
+            android:name=".DataGuruFragment"
+            android:exported="false"
+            android:theme="@style/Theme.EAlMawar" />
+        <!-- ResetPasswordActivity dengan Deep Link -->
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="ealmawar.page.link"
+                    android:pathPrefix="/resetpassword"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity> <!-- Aktivitas lainnya -->
+        <activity
             android:name=".LoadingFragment"
             android:exported="false"
             android:theme="@style/Theme.EAlMawar" />
@@ -28,24 +48,6 @@
             android:exported="false" />
         <activity
             android:name=".UploadBekasFragment"
-            android:exported="false" />
-        <activity
-            android:name=".AdminEditFormulirFragment"
-            android:exported="false" />
-        <activity
-            android:name=".AdminEditEkstrakulikulerFragment"
-            android:exported="false" />
-        <activity
-            android:name=".AdminEditSarprasFragment"
-            android:exported="false" />
-        <activity
-            android:name=".AdminSejarahFragment"
-            android:exported="false" />
-        <activity
-            android:name=".AdminSchoolFragment"
-            android:exported="false" />
-        <activity
-            android:name=".AdminDatabasePendaftaranFragment"
             android:exported="false" />
         <activity
             android:name=".SiswaEkstrakulikulerFragment"
@@ -91,15 +93,6 @@
             android:exported="false" />
         <activity
             android:name=".SiswaHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AdminHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginSiswaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginAdminActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

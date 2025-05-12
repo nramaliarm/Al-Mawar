@@ -33,6 +33,18 @@ public class SiswaHomeActivity extends AppCompatActivity {
         }
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
+            // Ambil view dari item yang diklik
+            android.view.View view = bottomNavigationView.findViewById(item.getItemId());
+            if (view != null) {
+                view.animate().scaleX(1.2f).scaleY(1.2f)
+                        .setDuration(100)
+                        .setInterpolator(new android.view.animation.OvershootInterpolator())
+                        .withEndAction(() -> view.animate().scaleX(1f).scaleY(1f)
+                                .setDuration(150)
+                                .start())
+                        .start();
+            }
+
             Fragment selectedFragment = null;
 
             if (item.getItemId() == R.id.home) {
@@ -54,6 +66,7 @@ public class SiswaHomeActivity extends AppCompatActivity {
 
             return true;
         });
+
     }
 
     // Fungsi untuk mengganti fragment

@@ -61,6 +61,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:19.2.0")
 
     // Libraries
+    implementation ("com.google.firebase:firebase-dynamic-links:20.0.1")
     implementation ("com.google.firebase:firebase-auth:21.0.1")
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.github.bumptech.glide:glide:4.12.0")

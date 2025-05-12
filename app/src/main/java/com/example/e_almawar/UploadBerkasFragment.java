@@ -11,28 +11,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.database.Cursor;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import androidx.fragment.app.FragmentTransaction;
 
 import org.json.JSONObject;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
+
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -84,11 +82,26 @@ public class UploadBerkasFragment extends Fragment {
         }
 
         Button uploadButton = view.findViewById(R.id.btn_upload_berkas);
-        uploadButton.setOnClickListener(v -> uploadAllImages());
+        uploadButton.setOnClickListener(v -> {
+            if (!isFormValid()) {
+                Toast.makeText(getContext(), "Harap isi semua berkas, kecuali KIP yang bersifat opsional.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            uploadAllImages();
+        });
 
         return view;
     }
 
+    private boolean isFormValid() {
+        for (String key : fieldKeys) {
+            if (key.equals("kip")) continue; // KIP opsional
+            if (!selectedImageUris.containsKey(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private void selectImage() {
         Intent intent = new Intent();
@@ -122,13 +135,12 @@ public class UploadBerkasFragment extends Fragment {
     }
 
     private void uploadAllImages() {
-        if (selectedImageUris.isEmpty()) {
-            Toast.makeText(getContext(), "Silakan pilih minimal 1 gambar.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        showLoadingFragment();
 
         Map<String, String> uploadedUrls = new HashMap<>();
         final int[] counter = {0};
+        final boolean[] failed = {false};
+        int totalToUpload = selectedImageUris.size();
 
         for (String key : selectedImageUris.keySet()) {
             Uri imageUri = selectedImageUris.get(key);
@@ -137,14 +149,18 @@ public class UploadBerkasFragment extends Fragment {
                 public void onSuccess(String imageUrl) {
                     uploadedUrls.put(key, imageUrl);
                     counter[0]++;
-                    if (counter[0] == selectedImageUris.size()) {
+                    if (counter[0] == totalToUpload) {
                         saveToFirestore(uploadedUrls);
                     }
                 }
 
                 @Override
                 public void onFailure(String error) {
-                    Toast.makeText(getContext(), "Upload gagal: " + error, Toast.LENGTH_SHORT).show();
+                    if (!failed[0]) {
+                        failed[0] = true;
+                        hideLoadingFragment();
+                        Toast.makeText(getContext(), "Upload gagal: " + error, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -204,33 +220,41 @@ public class UploadBerkasFragment extends Fragment {
     }
 
     private void saveToFirestore(Map<String, String> data) {
-        Map<String, Object> convertedData = new HashMap<>();
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            convertedData.put(entry.getKey(), entry.getValue());
-        }
+        Map<String, Object> convertedData = new HashMap<>(data);
 
         String userId = auth.getCurrentUser().getUid();
         db.collection("data_siswa").document(userId)
                 .update(convertedData)
                 .addOnSuccessListener(aVoid -> {
-                    View rootView = getView();
-                    if (rootView != null) {
-                        Toast.makeText(getActivity(), "Berkas berhasil diupload!", Toast.LENGTH_SHORT).show();
+                    hideLoadingFragment();
+                    Toast.makeText(getActivity(), "Berkas berhasil diupload!", Toast.LENGTH_SHORT).show();
 
-                        // Arahkan ke BerhasilDaftarFragment setelah berkas berhasil diupload
-                        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, new BerhasilDaftarFragment());
-                        transaction.addToBackStack(null);  // Menambahkan transaksi ke backstack agar pengguna bisa menekan back untuk kembali
-                        transaction.commit();
-                    }
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, new BerhasilDaftarFragment());
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 })
                 .addOnFailureListener(e -> {
+                    hideLoadingFragment();
                     Toast.makeText(getContext(), "Gagal menyimpan data", Toast.LENGTH_SHORT).show();
                 });
-
     }
 
+    private void showLoadingFragment() {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new LoadingFragment(), "LOADING_FRAGMENT");
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
+    private void hideLoadingFragment() {
+        Fragment loadingFragment = getParentFragmentManager().findFragmentByTag("LOADING_FRAGMENT");
+        if (loadingFragment != null) {
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            transaction.remove(loadingFragment);
+            transaction.commit();
+        }
+    }
 
     private interface ImgurCallback {
         void onSuccess(String imageUrl);

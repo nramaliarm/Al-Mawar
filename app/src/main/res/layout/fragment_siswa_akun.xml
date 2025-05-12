@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradien_background"
+    android:background="@drawable/background"
     tools:context=".SiswaAkunFragment">
 
     <!-- Header -->
@@ -15,7 +15,7 @@
         android:paddingStart="16dp"
         android:paddingTop="16dp"
         android:text="Akun"
-        android:textColor="#000000"
+        android:textColor="@color/textPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/cardview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHeader">
@@ -43,12 +44,11 @@
             <!-- Foto Profil (Circular) -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivProfile"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000" />
+                android:src="@drawable/ic_profile" />
 
             <!-- Atau alternatif jika tidak menggunakan library CircleImageView -->
             <!--
@@ -68,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:textColor="@color/textPrimary"
                 android:text="Nama :"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -78,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="Not Available"
                 android:textSize="16sp"
-                android:textColor="#000" />
+                android:textColor="@color/textPrimary" />
 
             <View
                 android:layout_width="match_parent"
@@ -93,7 +94,8 @@
                 android:layout_height="wrap_content"
                 android:text="Email :"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/textPrimary"/>
 
             <TextView
                 android:id="@+id/tvEmail"
@@ -101,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:text="Not Available"
                 android:textSize="16sp"
-                android:textColor="#000" />
+                android:textColor="@color/textPrimary" />
 
             <View
                 android:layout_width="match_parent"
@@ -117,7 +119,8 @@
                 android:layout_marginTop="8dp"
                 android:text="Password :"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/textPrimary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -131,7 +134,8 @@
                     android:layout_weight="1"
                     android:id="@+id/tvPassword"
                     android:text="Not Available"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@color/textPrimary"/>
 
                 <Button
                     android:id="@+id/btnTogglePassword"
@@ -143,7 +147,7 @@
                     android:contentDescription="Toggle Password Visibility"
                     android:text=""
                     android:padding="0dp"
-                    android:backgroundTint="@android:color/transparent" />
+                    android:backgroundTint="@android:color/black" />
 
 
             </LinearLayout>
@@ -160,9 +164,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="@color/orange"
+                android:backgroundTint="@color/buttonOrange"
                 android:text="Edit Profile"
-                android:textColor="@android:color/white"
+                android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

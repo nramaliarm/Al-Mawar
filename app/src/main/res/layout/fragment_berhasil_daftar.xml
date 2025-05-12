@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/appBackground">
 
     <!-- ScrollView untuk konten utama - Perbaikan atribut height menjadi 0dp dengan constraint -->
     <ScrollView
@@ -36,7 +36,7 @@
                     android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-medium"
                     android:text=""
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +59,7 @@
                     android:fontFamily="sans-serif-black"
                     android:text="Sekolah Islam Terpadu ALMAWAR Kolaka"
                     android:textAlignment="textStart"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:backgroundTint="@color/orange"
+                    android:backgroundTint="@color/buttonOrange"
                     android:drawableEnd="@drawable/ic_lokasi2"
                     android:drawablePadding="8dp"
                     android:gravity="start|center_vertical"
@@ -107,14 +107,15 @@
                 android:layout_margin="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/buttonOrange"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="#FFA54F">
+                    android:background="#FFA54F"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -129,10 +130,11 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="1dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginLeft="10dp"
                         android:layout_marginBottom="10dp"
+                        app:cardBackgroundColor="@color/cardview"
                         app:cardCornerRadius="8dp">
 
                         <LinearLayout
@@ -144,13 +146,13 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:paddingRight="10dp"
-                                android:paddingLeft="10dp"
                                 android:layout_marginBottom="16dp"
                                 android:gravity="center"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
                                 android:text="Anda telah melakukan pengisian formulir pendaftaran dan pengisian berkas, info status pendaftaran akan dikabari melalui email/no.hp"
                                 android:textAlignment="center"
-                                android:textColor="#000000"
+                                android:textColor="@color/textPrimary"
                                 android:textSize="16sp" />
 
                             <ImageView

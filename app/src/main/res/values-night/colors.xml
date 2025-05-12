@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="appBackground">#141118</color>
+    <color name="navBackground">#141118</color>
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="buttonOrange">#624E26</color>
+    <color name="cardview">#1F262C</color>
+    <color name="loginBackground">#141118</color>
+    <color name="btnb">#141118</color>
+</resources>

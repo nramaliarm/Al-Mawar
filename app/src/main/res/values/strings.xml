@@ -11,6 +11,12 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="document_not_found">Dokumen tidak ditemukan.</string>
+    <string name="invalid_data_format">Format data tidak valid.</string>
+    <string name="processing_error">Gagal memproses data.</string>
+    <string name="data_load_failed">Gagal mengambil data.</string>
+    <string name="greeting_message">Halo, %1$s!</string>
+    <string name="goal_format">%1$d. %2$s</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
