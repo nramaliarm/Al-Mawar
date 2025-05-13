@@ -45,8 +45,6 @@
         android:background="@android:color/transparent"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical">
-
-        <!-- Ikon Email -->
         <ImageView
             android:id="@+id/iconEmail"
             android:layout_width="20dp"
@@ -55,8 +53,6 @@
             android:contentDescription="Ikon Email"
             android:layout_marginStart="10dp"
             android:tint="@color/textPrimary"/>
-
-        <!-- Input Email -->
         <EditText
             android:id="@+id/inputEmail"
             android:layout_width="0dp"
@@ -78,8 +74,6 @@
         android:background="@android:color/transparent"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical">
-
-        <!-- Ikon Nama -->
         <ImageView
             android:id="@+id/iconNama"
             android:layout_width="20dp"
@@ -88,8 +82,6 @@
             android:contentDescription="Ikon Nama"
             android:layout_marginStart="10dp"
             android:tint="@color/textPrimary"/>
-
-        <!-- Input Nama -->
         <EditText
             android:id="@+id/inputNama"
             android:layout_width="0dp"
@@ -111,8 +103,6 @@
         android:background="@android:color/transparent"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical">
-
-        <!-- Ikon Password -->
         <ImageView
             android:id="@+id/iconPassword"
             android:layout_width="20dp"
@@ -121,8 +111,6 @@
             android:contentDescription="Ikon Password"
             android:layout_marginStart="10dp"
             android:tint="@color/textPrimary"/>
-
-        <!-- Input Password -->
         <EditText
             android:id="@+id/inputPassword"
             android:layout_width="0dp"
@@ -168,4 +156,19 @@
         android:textColor="@color/orange"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"/>
+
+    <!-- ProgressBar untuk loading -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"/>
+
+    <!-- FrameLayout untuk Fragment -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

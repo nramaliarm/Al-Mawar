@@ -1,11 +1,13 @@
 package com.example.e_almawar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.SharedPreferences;
@@ -26,12 +28,15 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.firebase.firestore.SetOptions;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private GoogleSignInClient mGoogleSignInClient;
-
+    private ProgressBar progressBar;  // Loading indicator
     private static final int RC_SIGN_IN = 9001;  // Unique request code for Google Sign-In
 
     @Override
@@ -70,8 +75,10 @@ public class SignUpActivity extends AppCompatActivity {
             if (email.isEmpty() || nama.isEmpty() || password.isEmpty()) {
                 Toast.makeText(SignUpActivity.this, "Harap isi semua kolom!", Toast.LENGTH_SHORT).show();
             } else {
+                showLoadingFragment();  // Menampilkan loading fragment
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this, task -> {
+                            hideLoadingFragment(); // Menyembunyikan loading fragment setelah selesai
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 if (user != null) {
@@ -95,12 +102,12 @@ public class SignUpActivity extends AppCompatActivity {
                                                         .set(userMap, SetOptions.merge())
                                                         .addOnSuccessListener(aVoid -> {
                                                             Log.d("Firestore", "Data pengguna berhasil disimpan.");
-
+                                                            // Menyimpan ke SharedPreferences
                                                             SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
                                                             SharedPreferences.Editor editor = sharedPreferences.edit();
                                                             editor.putString("user_name", nama);
                                                             editor.putString("user_email", email);
-                                                            editor.putString("user_password", password); // ← Simpan password di sini kalau kamu memang butuh
+                                                            editor.putString("user_password", password); // Menyimpan password
                                                             editor.apply();
 
                                                             startActivity(new Intent(SignUpActivity.this, SiswaHomeActivity.class));
@@ -114,22 +121,16 @@ public class SignUpActivity extends AppCompatActivity {
                                 }
                             } else {
                                 String errorMessage = task.getException().getMessage();
-                                if (errorMessage.contains("The email address is already in use by another account")) {
-                                    Toast.makeText(SignUpActivity.this, "Email sudah terdaftar!", Toast.LENGTH_SHORT).show();
-                                } else if (errorMessage.contains("The given password is invalid")) {
-                                    Toast.makeText(SignUpActivity.this, "Password terlalu lemah! Gunakan password yang lebih kuat.", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.e("SignUpActivity", "Firebase authentication failed: " + errorMessage);
-                                    Toast.makeText(SignUpActivity.this, "Pendaftaran gagal: " + errorMessage, Toast.LENGTH_SHORT).show();
-                                }
+                                Log.e("SignUpActivity", "Firebase authentication failed: " + errorMessage);
+                                Toast.makeText(SignUpActivity.this, "Pendaftaran gagal: " + errorMessage, Toast.LENGTH_SHORT).show();
                             }
                         });
             }
         });
 
-// Sign Up with Google
+        // Sign Up with Google
         btnSignUpGoogle.setOnClickListener(v -> {
-            // Memastikan sign-out dulu sebelum memulai Google Sign-In
+            showLoadingFragment();  // Menampilkan loading fragment
             mGoogleSignInClient.signOut()
                     .addOnCompleteListener(this, task -> {
                         // Memulai proses Google Sign-In
@@ -137,7 +138,6 @@ public class SignUpActivity extends AppCompatActivity {
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                     });
         });
-
 
         btnLogin.setOnClickListener(v -> {
             startActivity(new Intent(SignUpActivity.this, MainActivity.class)); // Navigasi ke login
@@ -153,17 +153,38 @@ public class SignUpActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             GoogleSignIn.getSignedInAccountFromIntent(data)
                     .addOnCompleteListener(task -> {
+                        hideLoadingFragment(); // Menyembunyikan loading fragment setelah selesai
                         if (task.isSuccessful()) {
                             GoogleSignInAccount account = task.getResult();
-                            firebaseAuthWithGoogle(account.getIdToken());  // Menggunakan idToken untuk autentikasi Firebase
+                            if (account != null) {
+                                String email = account.getEmail();
+                                checkEmailExists(email);  // Memeriksa apakah email sudah terdaftar di Firebase
+                            }
                         } else {
-                            // Improved logging and specific error message
                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                             Log.e("GoogleSignIn", "Google Sign-In failed: " + errorMessage);
                             Toast.makeText(SignUpActivity.this, "Google Sign-In failed: " + errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
         }
+    }
+
+    private void checkEmailExists(String email) {
+        mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().getSignInMethods().isEmpty()) {
+                            // Email tidak terdaftar, lanjutkan pendaftaran
+                            firebaseAuthWithGoogle(email);
+                        } else {
+                            // Email sudah terdaftar
+                            Toast.makeText(SignUpActivity.this, "Email sudah terdaftar", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // Tangani error
+                        Log.e("SignUpActivity", "Error checking email: " + task.getException().getMessage());
+                    }
+                });
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
@@ -189,8 +210,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 .set(userMap, SetOptions.merge())
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("Firestore", "Data pengguna berhasil disimpan.");
-
-                                    // ✅ Tambahkan ini untuk menyimpan ke SharedPreferences
                                     SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("user_name", user.getDisplayName());
@@ -201,17 +220,34 @@ public class SignUpActivity extends AppCompatActivity {
                                     startActivity(new Intent(SignUpActivity.this, SiswaHomeActivity.class));
                                     finish();
                                 })
-
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(SignUpActivity.this, "Gagal menyimpan ke Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     Log.e("FirestoreError", e.getMessage());
                                 });
                     } else {
-                        // Handle authentication failure here
                         String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                         Log.e("FirebaseAuth", "Authentication failed: " + errorMessage);
                         Toast.makeText(SignUpActivity.this, "Authentication failed: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+    private void showLoadingFragment() {
+        // Menampilkan LoadingFragment selama proses berjalan
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new LoadingFragment(), "LOADING_FRAGMENT");
+        transaction.addToBackStack(null); // Agar fragment loading tidak hilang saat navigasi
+        transaction.commit();
+    }
+
+    private void hideLoadingFragment() {
+        // Menyembunyikan LoadingFragment setelah proses selesai
+        Fragment loadingFragment = getSupportFragmentManager().findFragmentByTag("LOADING_FRAGMENT");
+        if (loadingFragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.remove(loadingFragment);
+            transaction.commit();
+        }
+    }
+
 }
