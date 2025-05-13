@@ -22,6 +22,18 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
     private Context context;
     private List<Facility> facilityList;
 
+    private OnItemClickListener listener;
+
+    // Interface untuk listener klik
+    public interface OnItemClickListener {
+        void onItemClick(Facility facility);
+    }
+
+    // Setter untuk OnItemClickListener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public FacilityAdapter(Context context, List<Facility> facilityList) {
         this.context = context;
         this.facilityList = facilityList;
@@ -42,9 +54,16 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
         Glide.with(context)
                 .load(facility.getImageUrl())
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(24)))
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.image_background)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.ivFacility);
+
+        // Menambahkan listener untuk klik pada gambar
+        holder.ivFacility.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(facility); // Memanggil listener klik
+            }
+        });
     }
 
     @Override
@@ -58,8 +77,8 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNama = itemView.findViewById(R.id.tv_nama_fasilitas); // pastikan ID sama dengan layout item_facility.xml
-            ivFacility = itemView.findViewById(R.id.ivFacilityImage); // pastikan ID sama juga
+            tvNama = itemView.findViewById(R.id.tv_nama_fasilitas); // pastikan ID sesuai dengan item_facility.xml
+            ivFacility = itemView.findViewById(R.id.ivFacilityImage); // pastikan ID sesuai juga
         }
     }
 }

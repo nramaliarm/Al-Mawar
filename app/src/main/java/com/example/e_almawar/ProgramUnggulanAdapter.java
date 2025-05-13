@@ -22,6 +22,18 @@ public class ProgramUnggulanAdapter extends RecyclerView.Adapter<ProgramUnggulan
     private Context context;
     private List<ProgramUnggulan> programList;
 
+    private OnItemClickListener listener;
+
+    // Interface untuk listener klik
+    public interface OnItemClickListener {
+        void onItemClick(ProgramUnggulan program);
+    }
+
+    // Setter untuk OnItemClickListener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public ProgramUnggulanAdapter(Context context, List<ProgramUnggulan> programList) {
         this.context = context;
         this.programList = programList;
@@ -41,10 +53,17 @@ public class ProgramUnggulanAdapter extends RecyclerView.Adapter<ProgramUnggulan
 
         Glide.with(context)
                 .load(program.getImageUrl())
-                .apply(RequestOptions.bitmapTransform(new RoundedCorners(24)))
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_foreground)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(24))) // Radius sudut gambar
+                .placeholder(R.drawable.image_background) // Placeholder jika gambar belum dimuat
+                .error(R.drawable.ic_launcher_foreground) // Gambar jika gagal dimuat
                 .into(holder.ivProgram);
+
+        // Menambahkan listener untuk klik pada gambar
+        holder.ivProgram.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(program); // Memanggil listener klik
+            }
+        });
     }
 
     @Override

@@ -52,7 +52,7 @@ public class GuruAdapter extends RecyclerView.Adapter<GuruAdapter.ViewHolder> {
         Glide.with(context)
                 .load(guru.getFotoURL())
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(24)))
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.foto_background)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.ivGuru);
 

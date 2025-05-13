@@ -22,5 +22,5 @@
         <item name="cardBackgroundColor">@color/cardview</item>
     </style>
 
-
+    <style name="CircularShapeAppearance"></style>
 </resources>

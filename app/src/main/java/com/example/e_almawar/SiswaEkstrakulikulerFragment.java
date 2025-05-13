@@ -49,10 +49,19 @@ public class SiswaEkstrakulikulerFragment extends Fragment {
         adapter = new EkskulAdapter(getContext(), ekskulList);
         recyclerView.setAdapter(adapter);
 
+        // ✅ Set click listener untuk item ekskul
+        adapter.setOnItemClickListener(ekskul -> {
+            if (ekskul != null) {
+                EkskulDetailDialog.show(requireContext(), ekskul);
+            } else {
+                Log.e("SiswaEkstrakulikulerFragment", "Ekskul data is null");
+            }
+        });
+
         db = FirebaseFirestore.getInstance();
 
-        loadUserData();
-        loadEkskulData();
+        loadUserData(); // Ambil nama dan foto profil
+        loadEkskulData(); // Ambil data ekstrakurikuler
 
         return view;
     }
@@ -83,7 +92,7 @@ public class SiswaEkstrakulikulerFragment extends Fragment {
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Log.e("SiswaEkskulFragment", "Gagal memuat data pengguna: " + e.getMessage());
+                        Log.e("SiswaEkstrakulikulerFragment", "Gagal memuat data pengguna: " + e.getMessage());
                         Toast.makeText(getContext(), "Gagal mengambil data pengguna", Toast.LENGTH_SHORT).show();
                     });
         }
@@ -101,10 +110,11 @@ public class SiswaEkstrakulikulerFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("SiswaEkskulFragment", "Gagal mengambil data ekskul: " + e.getMessage());
+                    Log.e("SiswaEkstrakulikulerFragment", "Gagal mengambil data ekskul: " + e.getMessage());
                     Toast.makeText(getContext(), "Gagal memuat data ekstrakurikuler", Toast.LENGTH_SHORT).show();
                 });
     }
+
     private int calculateSpanCount() {
         float screenWidthDp = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().density;
 

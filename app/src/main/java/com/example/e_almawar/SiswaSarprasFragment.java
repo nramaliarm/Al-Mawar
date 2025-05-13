@@ -43,13 +43,21 @@ public class SiswaSarprasFragment extends Fragment {
         int spanCount = calculateSpanCount();
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
 
-
         tvGreeting = view.findViewById(R.id.tv_greeting);
         ivProfile = view.findViewById(R.id.iv_profile);
 
         facilityList = new ArrayList<>();
         adapter = new FacilityAdapter(getContext(), facilityList);
         recyclerView.setAdapter(adapter);
+
+        // ✅ Set click listener untuk item guru
+        adapter.setOnItemClickListener(facility -> {
+            if (facility != null) {
+                SarprasDetailDialog.show(requireContext(), facility);
+            } else {
+                Log.e("SiswaSarprasFragment", "Facility data is null");
+            }
+        });
 
         db = FirebaseFirestore.getInstance();
 

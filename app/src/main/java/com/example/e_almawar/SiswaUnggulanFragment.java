@@ -49,6 +49,15 @@ public class SiswaUnggulanFragment extends Fragment {
         adapter = new ProgramUnggulanAdapter(getContext(), unggulanList);
         recyclerView.setAdapter(adapter);
 
+        // ✅ Set click listener untuk item program unggulan
+        adapter.setOnItemClickListener(program -> {
+            if (program != null) {
+                UnggulanDetailDialog.show(requireContext(), program); // Tampilkan detail program unggulan
+            } else {
+                Log.e("SiswaUnggulanFragment", "Program data is null");
+            }
+        });
+
         db = FirebaseFirestore.getInstance();
 
         loadUserData();
@@ -110,11 +119,11 @@ public class SiswaUnggulanFragment extends Fragment {
         float screenWidthDp = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().density;
 
         if (screenWidthDp >= 720) {
-            return 4;
+            return 4; // Tablet atau layar lebar
         } else if (screenWidthDp >= 600) {
-            return 3;
+            return 3; // Layar sedang
         } else {
-            return 2;
+            return 2; // Layar kecil (smartphone)
         }
     }
 }

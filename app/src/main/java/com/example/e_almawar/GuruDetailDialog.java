@@ -42,7 +42,7 @@ public class GuruDetailDialog {
         Glide.with(context)
                 .load(guru.getFotoURL())
                 .apply(RequestOptions.circleCropTransform())
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.foto_background)
                 .into(ivFoto);
 
         tvNama.setText(guru.getNamaLengkap());
