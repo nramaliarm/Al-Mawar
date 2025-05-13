@@ -19,6 +19,9 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,13 +35,23 @@ public class SiswaAkunFragment extends Fragment {
     private String userPassword = "";
     private boolean isPasswordVisible = false;
 
+    // Tambahan untuk Google Sign In
+    private GoogleSignInClient mGoogleSignInClient;
+
     private static final String TAG = "SiswaAkunFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_siswa_akun, container, false);
 
-        // onCreateView
+        // Inisialisasi Google Sign In Client
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+
+        // Inisialisasi komponen UI
         btnLogout = view.findViewById(R.id.btnLogout);
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnTogglePassword = view.findViewById(R.id.btnTogglePassword);
@@ -65,7 +78,6 @@ public class SiswaAkunFragment extends Fragment {
             Log.d(TAG, "Tombol toggle password diklik");
             togglePasswordVisibility();
         });
-
 
         return view;
     }
@@ -115,7 +127,6 @@ public class SiswaAkunFragment extends Fragment {
         setHiddenPassword();
         loadImage(profileImageUrl);
     }
-
 
     private void loadFromSharedPreferences() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
@@ -190,15 +201,21 @@ public class SiswaAkunFragment extends Fragment {
                 .setMessage("Apakah Anda yakin ingin keluar?")
                 .setCancelable(false)
                 .setPositiveButton("Ya", (dialog, which) -> {
+                    // Hapus data SharedPreferences
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
                     sharedPreferences.edit().clear().apply();
 
+                    // Logout dari Firebase
                     FirebaseAuth.getInstance().signOut();
 
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    getActivity().finish();
+                    // Logout dari Google
+                    mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+                        // Arahkan ke MainActivity setelah logout
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
+                    });
                 })
                 .setNegativeButton("Tidak", null)
                 .show();
@@ -210,7 +227,6 @@ public class SiswaAkunFragment extends Fragment {
             );
         }
     }
-
 
     @Override
     public void onResume() {
